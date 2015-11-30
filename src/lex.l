@@ -7,14 +7,13 @@
 #define SAVE_STRING    yylval.str = makestring(yytext, yyleng, 2)
 #define SAVE_STRING_NC yylval.str = makestring(yytext, yyleng, 3)
 
-int yywrap() { return 1; }
 char* maketoken(const char* data, int len);
 char* makestring(const char* data, int len, int s);
 
 %}
 
 %option yylineno
-
+%option noyywrap
 %%
 
 "/*"([^\*]|(\*)*[^\*/])*(\*)*"*/" ; /* 就是这种注释 */ 
@@ -56,4 +55,13 @@ char* makestring(const char* data, int len, int s) {
     str[len-s] = 0;
     if (s == 3) return str;
     return str; 
+}
+
+void slip_reset_file(FILE* f) {
+    yyrestart(f);
+}
+
+void slip_scan_string(const char* str)
+{
+    yy_switch_to_buffer(yy_scan_string(str));
 }

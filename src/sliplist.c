@@ -2,13 +2,16 @@
 * @Author: sxf
 * @Date:   2015-11-30 08:34:58
 * @Last Modified by:   sxf
-* @Last Modified time: 2015-11-30 12:25:50
+* @Last Modified time: 2015-11-30 21:28:39
 */
 
 #include "sliplist.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
+#include <assert.h>
+#include <string.h>
+#include "parser.h"
 
 
 /**
@@ -24,16 +27,16 @@ slip_IntNode*
 slipL_create_IntNode(int num) {
 	mallocNode(slip_IntNode, n);
 	NODE_LIST_CREATE_INIT(n);
-	STYPE_INIT(int_t);
+	STYPE_INIT(slipL_int_t);
 	n->value = num;
 	return n;
 }
 
 slip_FloatNode* 		
 slipL_create_FloatNode(double num) {
-	mallocNode(slip_IntNode, n);
+	mallocNode(slip_FloatNode, n);
 	NODE_LIST_CREATE_INIT(n);
-	STYPE_INIT(float_t);
+	STYPE_INIT(slipL_float_t);
 	n->value = num;
 	return n;
 }
@@ -42,7 +45,7 @@ slip_StringNode*
 slipL_create_StringNode(const char* str) {
 	mallocNode(slip_StringNode, n);
 	NODE_LIST_CREATE_INIT(n);
-	STYPE_INIT(string_t);
+	STYPE_INIT(slipL_string_t);
 	int len = strlen(str);
 	char* buf = (char*) malloc (len+1);
 	n->data = strcpy(buf, str);
@@ -53,7 +56,7 @@ slip_IDNode*
 slipL_create_IDNode(const char* str) {
 	mallocNode(slip_IDNode, n);
 	NODE_LIST_CREATE_INIT(n);
-	STYPE_INIT(id_t);
+	STYPE_INIT(slipL_id_t);
 	int len = strlen(str);
 	char* buf = (char*) malloc (len+1);
 	n->data = strcpy(buf, str);
@@ -64,20 +67,21 @@ slip_ListNode*
 slipL_create_ListNode(slip_Node* node) {
 	mallocNode(slip_ListNode, n);
 	NODE_LIST_CREATE_INIT(n);
-	STYPE_INIT(list_t);
+	STYPE_INIT(slipL_list_t);
 	n->child = node;
 	return n;
 }
 
 slip_IntNode* 		
 slipL_create_IntNodeFromStr(const char* str) {
-	int value = atoi(str);
+	int value = strtol(str, NULL, 0);
 	return slipL_create_IntNode(value);
 }
 
 slip_FloatNode* 		
 slipL_create_FloatNodeFromStr(const char* str) {
 	double value = atof(str);
+	printf("value=%.2f\n", value);
 	return slipL_create_FloatNode(value);
 }
 
@@ -109,25 +113,70 @@ slipL_addBrother(slip_Node* node, slip_Node* add_node) {
 static void
 printList_Node(slip_Node* node) {
 	switch(node->b.stype) {
-		case int_t: printf("int %d", node->i.value); break;
-		case float_t: printf("float %f", node->f.value); break;
-		case string_t: printf("string %s", node->s.data); break;
-		case id_t: printf("id %s", node->id.data); break;
-		case list_t: printf("list"); break;
+		case slipL_int_t: printf("int %d", node->i.value); break;
+		case slipL_float_t: printf("float %f", node->f.value); break;
+		case slipL_string_t: printf("string %s", node->s.data); break;
+		case slipL_id_t: printf("id %s", node->id.data); break;
+		case slipL_list_t: printf("list"); break;
 	}
 	printf("\n");
 }
 
 void					
 slipL_printList(slip_Node* node, int d) {
+	if (node == NULL) {
+		printf("链表空节点\n");
+		return;
+	}
 	for (int i = 0; i < d; ++i) {
 		printf("    ");
 	}
 	printList_Node(node);
-	if (node->b.stype == list_t) {
+	if (node->b.stype == slipL_list_t) {
 		slip_Node* child = node->l.child;
 		list_for_each(slip_Node*, p, child)
 			slipL_printList(p, d+1);
 		list_for_each_end
 	}
 }
+
+
+
+extern slip_Node* programBlock;
+extern void slip_scan_string(const char *str);
+extern void slip_reset_file(FILE* f);
+
+slip_Node* slipL_parseFile(const char* path) {
+	programBlock = NULL;
+	FILE* file_in;
+	if ((file_in = fopen(path, "r")) == NULL) {
+		printf("找不到程序源文件: %s\n", path);
+		return 0;
+	}
+	slip_reset_file(file_in); 
+	yyparse(); 
+	fclose(file_in);
+	// 打印语法树
+	printf("源文件 - %s\n", path);
+	slipL_printList(programBlock, 0);
+	return programBlock;
+}
+
+slip_Node* slipL_parseString(const char* str) {
+	programBlock = NULL;
+	char* buffer;
+	int buffer_size = strlen(str);
+	// 分配buffer
+	buffer = (char*) malloc(buffer_size);
+	assert(buffer != NULL);
+	strcpy(buffer, str);
+	// 正式解析
+	slip_scan_string(buffer); // 这句话只是在设置缓冲区
+	yyparse(); // 执行解析
+	// 释放资源
+	free(buffer);
+	// 打印语法树
+	slipL_printList(programBlock, 0);
+	return programBlock;
+}
+

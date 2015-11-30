@@ -2,7 +2,7 @@
 * @Author: sxf
 * @Date:   2015-11-30 09:38:17
 * @Last Modified by:   sxf
-* @Last Modified time: 2015-11-30 10:15:57
+* @Last Modified time: 2015-11-30 18:15:34
 */
 
 
@@ -18,8 +18,8 @@ typedef struct slip_Reg {
 	slip_CFunction func;
 } slip_Reg;
 
-extern int 		slipA_regLib(const char* lib_name, const slip_Reg* func_list);
-extern int 		slipA_regGlobalCfuncs(const slip_Reg* func_list);
+extern int 		slipL_regLib(const char* lib_name, const slip_Reg* func_list);
+extern int 		slipL_regGlobalCfuncs(const slip_Reg* func_list);
 
 
 

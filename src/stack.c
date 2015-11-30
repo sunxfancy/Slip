@@ -2,7 +2,7 @@
 * @Author: sxf
 * @Date:   2015-11-30 08:35:04
 * @Last Modified by:   sxf
-* @Last Modified time: 2015-11-30 16:08:16
+* @Last Modified time: 2015-11-30 17:47:30
 */
 
 #include "stack.h"
@@ -94,3 +94,13 @@ slipS_push(slip_Stack* stack, slip_Value value){
 } /* 压入新元素, 返回此时栈的大小, 即该元素的索引位置, 注意栈中元素是从1开始标号的 */
 
 
+int
+slipS_popNum(slip_Stack* stack, int num) {
+	int p;
+	if ( stack->stack_nuse >= num ) p = num;
+	else p = stack->stack_nuse;
+	for (int i = 0; i < p; ++i) {
+		slipS_pop(stack);
+	}
+	return p;
+} /* 弹出栈顶的指定个元素, 返回实际弹出的元素个数, 负数为异常 */

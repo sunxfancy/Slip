@@ -58,10 +58,10 @@ void yyerror(const char *s);
 program : list_node { programBlock = $1; }
         ;
 
-value : ID { $$ = slipL_create_IDNode($1); }
-      | STRING { $$ = slipL_create_StringNode($1); }
-      | DOUBLE { $$ = slipL_create_FloatNodeFromStr($1); }
-      | INTEGER { $$ = slipL_create_IntNodeFromStr($1); }
+value : ID { $$ = (slip_Node*)slipL_create_IDNode($1); }
+      | STRING { $$ = (slip_Node*)slipL_create_StringNode($1); }
+      | DOUBLE { $$ = (slip_Node*)slipL_create_FloatNodeFromStr($1); }
+      | INTEGER { $$ = (slip_Node*)slipL_create_IntNodeFromStr($1); }
       | list
       ;
 
@@ -69,7 +69,7 @@ list_node : value
           | list_node value { $$ = $1; slipL_addBrother($1, $2); }
           ;
 
-list : '(' list_node ')' { $$ = slipL_create_ListNode($2); }
+list : '(' list_node ')' { $$ = (slip_Node*)slipL_create_ListNode($2); }
      ;
 
 
@@ -81,3 +81,4 @@ void yyerror(const char* s){
     fprintf(stderr, "text %s \n", yytext);
     exit(1);
 }
+
