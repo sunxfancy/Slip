@@ -2,7 +2,7 @@
 * @Author: sxf
 * @Date:   2015-11-29 09:30:04
 * @Last Modified by:   sxf
-* @Last Modified time: 2015-11-30 09:53:57
+* @Last Modified time: 2015-11-30 13:04:37
 */
 
 
@@ -11,6 +11,7 @@
 #define SLIPCORE_H
 
 #include "vm.h"
+#include "stack.h"
 
 typedef struct slip_Context slip_Context;
 typedef struct slip_Core slip_Core;
@@ -29,9 +30,9 @@ struct slip_Context
  */
 struct slip_Core
 {
+
+	slip_Stack		stack;
 	slip_Context* 	context;
-	slip_VM* 		main_vm;
-	// slip_VM**		threads;
 };
 
 

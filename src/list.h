@@ -2,7 +2,7 @@
 * @Author: sxf
 * @Date:   2015-11-29 10:35:00
 * @Last Modified by:   sxf
-* @Last Modified time: 2015-11-30 12:20:33
+* @Last Modified time: 2015-11-30 15:28:57
 * 
 * 仿Linux的内核链表的实现
 * 一个简单双链表
@@ -89,6 +89,13 @@ _list_add(list_node *prev_node, list_node *next_node, list_node *new_node) {
 }
 
 
+static inline void 
+_list_remove(list_node *prev_node, list_node *next_node) {
+	next_node->prev = prev_node;
+	prev_node->next = next_node;
+}
+
+
 /**
  * @brief 在一个list节点后面插入
  * 
@@ -111,6 +118,21 @@ static inline void
 list_add(list_node* head_node, list_node *new_node) {
 	_list_add(head_node->prev, head_node, new_node);
 }
+
+
+/**
+ * @brief 移除尾节点
+ * 
+ * @param head_node list头结点
+ * @return 移除的元素指针, 释放内存需调用者手动free这个指针
+ */
+static inline void* 
+list_remove_last(list_node* head_node) {
+	if (head_node->prev == head_node) return head_node;
+	list_node* removed = head_node->prev;
+	_list_remove(removed->prev, head_node);
+}
+
 
 
 #endif // LIST_H
