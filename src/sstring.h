@@ -2,7 +2,7 @@
 * @Author: sxf
 * @Date:   2015-11-30 17:27:49
 * @Last Modified by:   sxf
-* @Last Modified time: 2015-11-30 21:40:20
+* @Last Modified time: 2015-12-01 10:10:54
 */
 
 
@@ -24,11 +24,27 @@ typedef struct SString {
  */
 extern int 		slipS_hash(SString* s);
 
+
+/**
+ * @brief 计算一个char指针的hash值
+ * 
+ * @param s 要计算的字符串
+ * @return hash值
+ */
+extern int 		slipS_hashcstr(const char* s);
+
 /**
  * @brief 测试两字符串是否相当
  * @return 若参数s1 和s2 字符串相同则返回1。否则返回0。
  */
 extern int 		slipS_equal(SString* s1, SString* s2);
+
+
+/**
+ * @brief 测试两字符串是否相当
+ * @return 若参数s1 和s2 字符串相同则返回1。否则返回0。
+ */
+extern int 		slipS_equalcstr(SString* s1, const char* s2);
 
 /**
  * @brief 字符串比较函数, 仅仅是简单调用了strcmp
