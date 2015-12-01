@@ -2,7 +2,7 @@
 * @Author: sxf
 * @Date:   2015-11-30 17:51:42
 * @Last Modified by:   sxf
-* @Last Modified time: 2015-11-30 18:09:28
+* @Last Modified time: 2015-12-01 09:57:51
 */
 
 #ifndef STABLE_H
@@ -32,6 +32,44 @@ typedef struct STable {
 
 } STable;
 
+
+extern STable* 		slipT_create();
+
+/**
+ * @brief 初始化Table的hash表部分
+ * @param t Table对象
+ * @param size 初始化后的大小
+ * 
+ * @return 正确时返回0, 否则为异常码
+ */
+extern int 			slipT_initHash(STable* t, int size);
+extern int 			slipT_initArray(STable* t, int size);
+
+/**
+ * @brief rehash过程 重新hash表内全部元素
+ * 
+ * @param t Table对象
+ * @param size 重新分配的大小
+ * 
+ * @return 正确时为0, 其余情况为异常码
+ */
+extern int 			slipT_reHash(STable* t, int size);
+extern int 			slipT_reArray(STable* t, int size);
+
+
+/**
+ * @brief 插入hash表
+ * 
+ * @param t [description]
+ * @param key [description]
+ * @param value 要插入的Value值
+ * @return 成功返回0, 异常返回异常码
+ */
+extern int 			slipT_insertHash(STable* t, SString* key, slip_Value value);
+extern slip_Value 	slipT_getHash(STable* t, SString* key);
+
+extern int 			slipT_insertArray(STable* t, int index, slip_Value value);
+extern slip_Value 	slipT_getArray(STable* t, SString* key);
 
 
 

@@ -2,7 +2,7 @@
 * @Author: sxf
 * @Date:   2015-11-30 17:41:42
 * @Last Modified by:   sxf
-* @Last Modified time: 2015-11-30 21:43:23
+* @Last Modified time: 2015-12-01 10:19:09
 */
 
 #include "sstring.h"
@@ -12,13 +12,19 @@
 #include <string.h>
 
 int 
-slipS_hash(SString* s) { // 这是一个针对32位整数的hash函数, 日后可以考虑变化hash的存储位数
+slipS_hash(SString* s) { 
+	s->hash = slipS_hashcstr(s->data);
+	return s->hash;
+}
+
+
+int
+slipS_hashcstr(const char* s) { // 这是一个针对32位整数的hash函数, 日后可以考虑变化hash的存储位数
 	uint32_t hash = 0;  
     uint32_t x = 0;  
-    const char* str = s->data;
-    while (*str)  
+    while (*s)  
     {  
-        hash = (hash << 4) + (*str++);//hash左移4位，把当前字符ASCII存入hash低四位。   
+        hash = (hash << 4) + (*s++);//hash左移4位，把当前字符ASCII存入hash低四位。   
         if ((x = hash & 0xF0000000L) != 0)  
         {  
             //如果最高的四位不为0，则说明字符多余7个，现在正在存第7个字符，如果不处理，再加下一个字符时，第一个字符会被移出，因此要有如下处理。  
@@ -33,6 +39,7 @@ slipS_hash(SString* s) { // 这是一个针对32位整数的hash函数, 日后�
     return (hash & 0x7FFFFFFF);  
 }
 
+
 int 
 slipS_equal(SString* s1, SString* s2) {
 	if (s1->hash == s2->hash) {
@@ -41,9 +48,21 @@ slipS_equal(SString* s1, SString* s2) {
 	return 0;
 }
 
+
+int 
+slipS_equalcstr(SString* s1, const char* s2) {
+	if (strcmp(s1->data, s2) == 0) return 1;
+	return 0;
+}
+
 SString*
 slipS_copy(SString* s) {
-	
+	SString* ns = slipS_create();
+	char* buf = (char*) malloc(s->len + 1);
+	assert(buf != NULL);
+	ns->data = strcpy(buf, s->data);
+	ns->len = s->len;
+	ns->hash = s->hash;
 }
 
 SString*

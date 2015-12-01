@@ -2,7 +2,7 @@
 * @Author: sxf
 * @Date:   2015-11-29 09:30:04
 * @Last Modified by:   sxf
-* @Last Modified time: 2015-11-30 13:04:37
+* @Last Modified time: 2015-12-01 09:56:32
 */
 
 
@@ -22,6 +22,7 @@ typedef struct slip_Core slip_Core;
  */
 struct slip_Context
 {
+	// 全局Table
 };
 
 
@@ -33,6 +34,8 @@ struct slip_Core
 
 	slip_Stack		stack;
 	slip_Context* 	context;
+
+	// 局部环境栈
 };
 
 
