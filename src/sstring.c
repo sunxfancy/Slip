@@ -2,7 +2,7 @@
 * @Author: sxf
 * @Date:   2015-11-30 17:41:42
 * @Last Modified by:   sxf
-* @Last Modified time: 2015-12-01 10:19:09
+* @Last Modified time: 2015-12-01 10:41:02
 */
 
 #include "sstring.h"
@@ -60,9 +60,11 @@ slipS_copy(SString* s) {
 	SString* ns = slipS_create();
 	char* buf = (char*) malloc(s->len + 1);
 	assert(buf != NULL);
-	ns->data = strcpy(buf, s->data);
+	strcpy(buf, s->data);
+	ns->data = buf;
 	ns->len = s->len;
 	ns->hash = s->hash;
+	return ns;
 }
 
 SString*
@@ -74,6 +76,7 @@ SString*
 slipS_createFromStr(const char* str) {
 	SString* s = slipS_create();
 	slipS_init(s, str);
+	return s;
 }
 
 SString* 
@@ -82,7 +85,9 @@ slipS_init(SString* s, const char* str) {
 	char* buf = (char*) malloc(len+1);
 	assert(buf != NULL);
 	if (s->data != NULL) free(s->data);
-	s->data = strcpy(buf, str);
+	strcpy(buf, str);
+	s->data = buf;
 	s->len = len;
 	s->hash = slipS_hash(s);
+	return s;
 }

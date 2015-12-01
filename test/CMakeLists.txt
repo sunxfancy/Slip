@@ -14,4 +14,11 @@ add_executable (coretest ${test_source_files} ${src_source_files}
 						 ${FLEX_MyScanner_OUTPUTS})
 target_link_libraries(coretest ${GTEST_BOTH_LIBRARIES} pthread)
 
+add_custom_target( runtest ALL
+                   DEPENDS coretest)
+
+add_custom_command(TARGET runtest
+                   POST_BUILD
+                   COMMAND coretest)
+
 add_test(MyTest coretest)
