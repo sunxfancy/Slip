@@ -2,7 +2,7 @@
 * @Author: sxf
 * @Date:   2015-11-29 09:30:04
 * @Last Modified by:   sxf
-* @Last Modified time: 2015-12-01 20:14:35
+* @Last Modified time: 2015-12-01 21:01:38
 */
 
 
@@ -49,8 +49,8 @@ struct slip_Core
 extern slip_Core* 		slipC_createCore();
 extern slip_Context* 	slipC_createContext();
 extern int 				slipC_close(slip_Core* vm);
-extern int 				slipC_loadFile(const char* path);
-extern int 				slipC_loadStr(const char* str);
+extern int 				slipC_loadFile(slip_Core* vm, const char* path);
+extern int 				slipC_loadStr(slip_Core* vm, const char* str);
 
 /**
  * @brief 立即执行一次小GC

@@ -2,7 +2,7 @@
 * @Author: sxf
 * @Date:   2015-11-29 22:10:37
 * @Last Modified by:   sxf
-* @Last Modified time: 2015-12-01 19:05:52
+* @Last Modified time: 2015-12-01 21:51:46
 */
 
 
@@ -48,8 +48,6 @@ extern int slipV_setValueCPtr(slip_Value* v, void* ptr);
 extern int slipV_setValueCFunc(slip_Value* v, slip_CFunction f);
 extern int slipV_setValueInt(slip_Value* v, int i);
 extern int slipV_setValueDouble(slip_Value* v, double d);
-
-
 
 
 

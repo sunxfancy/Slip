@@ -2,12 +2,14 @@
 * @Author: sxf
 * @Date:   2015-12-01 17:54:14
 * @Last Modified by:   sxf
-* @Last Modified time: 2015-12-01 20:14:57
+* @Last Modified time: 2015-12-01 21:12:12
 */
 
 #include <stdlib.h>
 #include "slipcore.h"
 #include "stable.h"
+#include "vm.h"
+#include "sliplist.h"
 
 
 slip_Core* 	
@@ -43,13 +45,17 @@ slipC_close(slip_Core* vm) {
 
 
 int
-slipC_loadFile(const char* path) {
-
+slipC_loadFile(slip_Core* vm, const char* path) {
+	slip_Node* l = slipL_parseFile(path);
+	slipV_pushListNode(vm, l);
+	slipV_call(vm);
 }
 
 
 int
-slipC_loadStr(const char* str) {
-
+slipC_loadStr(slip_Core* vm, const char* str) {
+	slip_Node* l = slipL_parseString(str);
+	slipV_pushListNode(vm, l);
+	slipV_call(vm);
 }
 

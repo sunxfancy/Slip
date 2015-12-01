@@ -2,7 +2,7 @@
 * @Author: sxf
 * @Date:   2015-12-01 16:42:01
 * @Last Modified by:   sxf
-* @Last Modified time: 2015-12-01 18:27:58
+* @Last Modified time: 2015-12-01 22:09:35
 */
 
 #include "schunk.h"
@@ -21,7 +21,9 @@ slipC_createChunk(slip_Node* node) {
 
 int
 slipC_callNode(slip_Core* vm, slip_Node* node) {
-	
+	if (node->b.stype == slipL_id_t) {
+		// node->id.data
+	}
 }
 
 
