@@ -2,7 +2,7 @@
 * @Author: sxf
 * @Date:   2015-11-29 09:30:04
 * @Last Modified by:   sxf
-* @Last Modified time: 2015-12-01 18:11:52
+* @Last Modified time: 2015-12-01 20:14:35
 */
 
 
@@ -12,6 +12,7 @@
 
 #include "vm.h"
 #include "stack.h"
+#include "value.h"
 
 typedef struct slip_Context slip_Context;
 typedef struct slip_Core slip_Core;
@@ -36,17 +37,20 @@ struct slip_Context
  */
 struct slip_Core
 {
-	slip_Stack		env_stack; // 放置环境table
+	slip_Obj 		base;
 	slip_Stack		stack;
 	slip_Context* 	context;
 
 	// 局部环境栈
+	slip_Stack		env_stack; // 放置环境table
 };
 
 
 extern slip_Core* 		slipC_createCore();
 extern slip_Context* 	slipC_createContext();
 extern int 				slipC_close(slip_Core* vm);
+extern int 				slipC_loadFile(const char* path);
+extern int 				slipC_loadStr(const char* str);
 
 /**
  * @brief 立即执行一次小GC
