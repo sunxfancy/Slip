@@ -2,14 +2,16 @@
 * @Author: sxf
 * @Date:   2015-11-30 17:51:42
 * @Last Modified by:   sxf
-* @Last Modified time: 2015-12-01 09:57:51
+* @Last Modified time: 2015-12-01 13:42:56
 */
 
 #ifndef STABLE_H
 #define STABLE_H
 
+#include "value.h"
 #include "object.h"
 
+typedef struct SString SString;
 
 typedef struct STablePair {
 	SString* key;
