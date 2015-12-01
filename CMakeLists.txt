@@ -24,14 +24,14 @@ ADD_FLEX_BISON_DEPENDENCY(MyScanner MyParser)
 include_directories(build include src)
 
 file(GLOB_RECURSE source_files ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c)
+list(REMOVE_ITEM  source_files ${CMAKE_CURRENT_SOURCE_DIR}/src/main.c)
 
-add_executable(slip ${source_files} 
-					${BISON_MyParser_OUTPUTS} 
-					${FLEX_MyScanner_OUTPUTS})
+add_library(slip STATIC ${source_files} ${BISON_MyParser_OUTPUTS} ${FLEX_MyScanner_OUTPUTS})
 
-install(TARGETS slip RUNTIME DESTINATION bin)
+add_executable(sliper src/main.c)
+target_link_libraries(sliper slip)
 
-
+install(TARGETS sliper RUNTIME DESTINATION bin)
 
 FIND_PACKAGE(Doxygen)  
 OPTION(BUILD_DOCUMENTATION "Create and install the HTML based API documentation (requires Doxygen)" ${DOXYGEN_FOUND})  
