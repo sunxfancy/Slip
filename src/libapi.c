@@ -2,7 +2,7 @@
 * @Author: sxf
 * @Date:   2015-12-01 15:16:58
 * @Last Modified by:   sxf
-* @Last Modified time: 2015-12-01 19:59:32
+* @Last Modified time: 2015-12-01 20:31:44
 */
 
 #include "libapi.h"
@@ -10,6 +10,7 @@
 #include "sstring.h"
 #include <stdio.h>
 #include "slipcore.h"
+#include "slip_stdlib.h"
 
 int 
 slipL_regLib(slip_Core* vm, const char* lib_name, const slip_Reg* func_list) {
@@ -55,3 +56,7 @@ slipL_regGlobalCfuncs(slip_Core* vm, const slip_Reg* func_list) {
 }
 
 
+int 		
+slipL_openStdLib(slip_Core* vm) {
+	slipL_regGlobalCfuncs(vm, testlib);
+}
