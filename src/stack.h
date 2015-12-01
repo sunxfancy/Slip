@@ -2,7 +2,7 @@
 * @Author: sxf
 * @Date:   2015-11-29 10:36:57
 * @Last Modified by:   sxf
-* @Last Modified time: 2015-11-30 17:51:13
+* @Last Modified time: 2015-12-01 17:32:46
 * 
 * slip虚拟机栈的实现, 基于内核双链表实现的块状数组
 * 整个栈的索引可以是1到栈顶, -1到栈底, 0为无效值
@@ -17,7 +17,7 @@
 #include "value.h"
 
 #ifndef BLOCK_SIZE
-#define BLOCK_SIZE 512
+#define BLOCK_SIZE 128
 #endif
 
 typedef struct slip_StackBlock {

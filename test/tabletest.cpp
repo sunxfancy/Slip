@@ -2,7 +2,7 @@
 * @Author: sxf
 * @Date:   2015-12-01 14:07:21
 * @Last Modified by:   sxf
-* @Last Modified time: 2015-12-01 14:28:05
+* @Last Modified time: 2015-12-01 18:11:10
 */
 
 #include "gtest/gtest.h"
@@ -12,15 +12,15 @@ extern "C" {
 #include "sstring.h"
 }
 
-TEST (tabletest_slipT_create, slipT_create)
+TEST (tabletest_slipT_createTable, slipT_createTable)
 {
-	STable* t = slipT_create();
+	STable* t = slipT_createTable();
 	ASSERT_NE(t, (void*)0);
 }
 
 TEST (tabletest_slipT_initHash, slipT_initHash)
 {
-	STable* t = slipT_create();
+	STable* t = slipT_createTable();
 	slipT_initHash(t, 8);
 	EXPECT_EQ(t->map_size, 8);
 	EXPECT_EQ(t->map_nuse, 0);
@@ -29,7 +29,7 @@ TEST (tabletest_slipT_initHash, slipT_initHash)
 
 TEST (tabletest_slipT_reHash, slipT_reHash)
 {
-	STable* t = slipT_create();
+	STable* t = slipT_createTable();
 	slipT_initHash(t, 8);
 	EXPECT_EQ(t->map_size, 8);
 	slipT_reHash(t, 16);
@@ -39,7 +39,7 @@ TEST (tabletest_slipT_reHash, slipT_reHash)
 
 TEST (tabletest_slipT_insertHash, slipT_insertHash)
 {
-	STable* t = slipT_create();
+	STable* t = slipT_createTable();
 	slipT_initHash(t, 8);
 	slip_Value save;
 	save.v.i = 1;

@@ -2,7 +2,7 @@
 * @Author: sxf
 * @Date:   2015-12-01 11:14:19
 * @Last Modified by:   sxf
-* @Last Modified time: 2015-12-01 13:59:34
+* @Last Modified time: 2015-12-01 18:11:00
 */
 
 #include "stable.h"
@@ -12,7 +12,7 @@
 
 
 STable* 		
-slipT_create() {
+slipT_createTable() {
 	return (STable*) calloc (1, sizeof(STable));
 }
 

@@ -2,7 +2,7 @@
 * @Author: sxf
 * @Date:   2015-11-29 22:10:37
 * @Last Modified by:   sxf
-* @Last Modified time: 2015-11-30 18:40:19
+* @Last Modified time: 2015-12-01 19:05:52
 */
 
 
@@ -28,12 +28,29 @@ typedef enum slip_ValueType {
 	slipV_list_t = 5,
 	slipV_table_t = 6,
 	slipV_string_t = 7,
-	slipV_thread_t = 8
+	slipV_thread_t = 8,
+	slipV_chunk_t = 9,
 } slip_ValueType;
 
 typedef struct slip_Value {
 	SValue 			v;
 	slip_ValueType 	t;
 } slip_Value;
+
+typedef struct SString SString;
+typedef struct SChunk SChunk;
+typedef struct STable STable;
+
+extern int slipV_setValueString(slip_Value* v, SString* s);
+extern int slipV_setValueChunk(slip_Value* v, SChunk* c);
+extern int slipV_setValueTable(slip_Value* v, STable* t);
+extern int slipV_setValueCPtr(slip_Value* v, void* ptr);
+extern int slipV_setValueCFunc(slip_Value* v, slip_CFunction f);
+extern int slipV_setValueInt(slip_Value* v, int i);
+extern int slipV_setValueDouble(slip_Value* v, double d);
+
+
+
+
 
 #endif // VALUE_H

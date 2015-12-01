@@ -2,7 +2,7 @@
 * @Author: sxf
 * @Date:   2015-11-30 08:35:04
 * @Last Modified by:   sxf
-* @Last Modified time: 2015-11-30 17:47:30
+* @Last Modified time: 2015-12-01 17:37:26
 */
 
 #include "stack.h"
@@ -21,6 +21,11 @@ void
 slipS_extend(slip_Stack* stack){
 	slip_StackBlock* block = slipS_createBlock();
 	assert(block != NULL);
+	if (stack->block_head == NULL) {
+		stack->block_head = block;
+		stack->stack_size += BLOCK_SIZE;
+		return;		
+	} 
 	list_add(GET_LIST_NODE(stack->block_head), 
 			 GET_LIST_NODE(block));
 	stack->stack_size += BLOCK_SIZE;
