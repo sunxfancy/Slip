@@ -2,7 +2,7 @@
 * @Author: sxf
 * @Date:   2015-11-30 08:35:18
 * @Last Modified by:   sxf
-* @Last Modified time: 2015-12-01 21:56:42
+* @Last Modified time: 2015-12-02 10:15:41
 */
 
 #include "vm.h"
@@ -14,11 +14,11 @@
 
 
 int
-slipV_call (slip_Core* vm) {
+slipV_call (slip_Core* vm, int num) {
 	slip_Value v = slipV_popValue(vm);
 	switch (v.t) {
-		case slipV_chunk_t:  return slipC_callChunk(vm, (SChunk*)(v.v.o)); 
-		case slipV_light_cfunc_t: return slipL_callCFunction(vm, v.v.f);
+		case slipV_chunk_t:  return slipC_callChunk(vm, (SChunk*)(v.v.o), num); 
+		case slipV_light_cfunc_t: return slipL_callCFunction(vm, v.v.f, num);
 	}
 }
 

@@ -2,7 +2,7 @@
 * @Author: sxf
 * @Date:   2015-11-29 20:09:30
 * @Last Modified by:   sxf
-* @Last Modified time: 2015-12-01 21:54:22
+* @Last Modified time: 2015-12-02 10:15:56
 * 
 * slip的栈式虚拟机
 */
@@ -27,7 +27,7 @@ typedef union slip_Node slip_Node;
  * @param vm 内核
  * @return 异常码
  */
-extern int 			slipV_call (slip_Core* vm);
+extern int 			slipV_call (slip_Core* vm, int num);
 
 extern int 			slipV_pushValue (slip_Core* vm, slip_Value value);
 extern slip_Value 	slipV_popValue (slip_Core* vm);

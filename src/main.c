@@ -2,7 +2,7 @@
 * @Author: sxf
 * @Date:   2015-11-29 09:05:24
 * @Last Modified by:   sxf
-* @Last Modified time: 2015-12-01 21:12:52
+* @Last Modified time: 2015-12-02 12:30:07
 */
 
 #include <stdio.h>
@@ -15,6 +15,7 @@ int main(int argc,const char *argv[]) {
 	else {
 		const char *file_in_name = argv[1];
 		slip_Core* vm = slipC_createCore();
+		slipL_openStdLib(vm);
 		slipC_loadFile(vm, file_in_name);
 	}
 	return 0;

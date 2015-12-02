@@ -2,7 +2,7 @@
 * @Author: sxf
 * @Date:   2015-11-29 09:30:04
 * @Last Modified by:   sxf
-* @Last Modified time: 2015-12-01 21:01:38
+* @Last Modified time: 2015-12-02 09:59:55
 */
 
 
@@ -51,6 +51,16 @@ extern slip_Context* 	slipC_createContext();
 extern int 				slipC_close(slip_Core* vm);
 extern int 				slipC_loadFile(slip_Core* vm, const char* path);
 extern int 				slipC_loadStr(slip_Core* vm, const char* str);
+
+/**
+ * @brief 核心的查找符号栈的函数
+ * 
+ * @param vm 内核
+ * @param id 要找的符号字符串
+ * 
+ * @return 找到返回对应的value，否则返回的value.v.i == 0
+ */
+extern slip_Value 		slipC_findID(slip_Core* vm, const char* id);
 
 /**
  * @brief 立即执行一次小GC

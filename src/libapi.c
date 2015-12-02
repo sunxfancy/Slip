@@ -2,7 +2,7 @@
 * @Author: sxf
 * @Date:   2015-12-01 15:16:58
 * @Last Modified by:   sxf
-* @Last Modified time: 2015-12-01 21:58:48
+* @Last Modified time: 2015-12-02 10:12:43
 */
 
 #include "libapi.h"
@@ -58,8 +58,8 @@ slipL_regGlobalCfuncs(slip_Core* vm, const slip_Reg* func_list) {
 
 
 int
-slipL_callCFunction(slip_Core* vm, slip_CFunction func) {
-	int ret_num = func(vm);
+slipL_callCFunction(slip_Core* vm, slip_CFunction func, int num) {
+	int ret_num = func(vm, num);
 	int pop_num = slipV_popValueNum(vm, ret_num);
 	if (pop_num != ret_num) return -1;
 	return 0;
