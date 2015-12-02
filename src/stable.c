@@ -2,7 +2,7 @@
 * @Author: sxf
 * @Date:   2015-12-01 11:14:19
 * @Last Modified by:   sxf
-* @Last Modified time: 2015-12-02 10:35:48
+* @Last Modified time: 2015-12-02 16:25:05
 */
 
 #include "stable.h"
@@ -11,31 +11,41 @@
 #include <malloc.h>
 
 
-static SString* meta = NULL;
+static slip_Obj* meta = NULL;
 
-STable* 		
+slip_Obj* 		
 slipT_createTable() {
 	if (meta == NULL) meta = slipS_createFromStr("meta");
-	return (STable*) calloc (1, sizeof(STable));
+	slip_Obj* obj = (slip_Obj*) calloc (1, sizeof(STable));
+	obj->type = slipO_table_t; // 创建元素并设定类型
+	return obj;
 }
 
 
 int 			
-slipT_initHash(STable* t, int size) {
-	if (t->hash_map != NULL) free (t->hash_map);
-	t->hash_map = (STablePair*) calloc (size, sizeof(STablePair));
-	t->map_nuse = 0;
-	t->map_size = size;
+slipT_initHash(slip_Obj* t, int size) {
+	STable* table;
+	if slipO_checkType(t, slipO_table_t) 
+		table = slipO_castTable(t);
+	else return -1;
+	if (table->hash_map != NULL) free (table->hash_map);
+	table->hash_map = (STablePair*) calloc (size, sizeof(STablePair));
+	table->map_nuse = 0;
+	table->map_size = size;
 	return 0;
 }
 
 
 int 			
-slipT_initArray(STable* t, int size) {
-	if (t->array != NULL) free (t->array);
-	t->array = (slip_Value*) calloc (size, sizeof(slip_Value));
-	t->array_nuse = 0;
-	t->array_size = size;
+slipT_initArray(slip_Obj* t, int size) {
+	STable* table;
+	if slipO_checkType(t, slipO_table_t) 
+		table = slipO_castTable(t);
+	else return -1;
+	if (table->array != NULL) free (table->array);
+	table->array = (slip_Value*) calloc (size, sizeof(slip_Value));
+	table->array_nuse = 0;
+	table->array_size = size;
 	return 0;
 }
 
@@ -57,15 +67,19 @@ getTCsequence(int i) {
 
 
 int 			
-slipT_reHash(STable* t, int size) {
-	int old_size = t->map_size;
-	STablePair* old_table = t->hash_map;
-	t->hash_map = calloc (size, sizeof(STablePair));
-	t->map_size = size;
+slipT_reHash(slip_Obj* t, int size) {
+	STable* table;
+	if slipO_checkType(t, slipO_table_t) 
+		table = slipO_castTable(t);
+	else return -1;
+	int old_size = table->map_size;
+	STablePair* old_table = table->hash_map;
+	table->hash_map = calloc (size, sizeof(STablePair));
+	table->map_size = size;
 	for (int i = 0; i < old_size; ++i) {	
 		SString* key = old_table[i].key;
 		if (key != 0) {
-			slipT_insertHash(t, key, old_table[i].value);
+			slipT_insertHash(table, key, old_table[i].value);
 		}
 	}
 	return 0;
@@ -73,13 +87,22 @@ slipT_reHash(STable* t, int size) {
 
 
 int 			
-slipT_reArray(STable* t, int size) {
+slipT_reArray(slip_Obj* t, int size) {
 
 }
 
 
 int
-slipT_insertHash(STable* t, SString* key, slip_Value value) {
+slipT_insertHash(slip_Obj* table, slip_Obj* skey, slip_Value value) {
+	STable* t;
+	if slipO_checkType(table, slipO_table_t) 
+		t = slipO_castTable(table);
+	else return -1;
+	SString* key;
+	if slipO_checkType(skey, slipO_string_t) 
+		key = slipO_castTable(skey);
+	else return -1;
+
 	if (t->map_size == 0) slipT_initHash(t, 8);
 	if (t->map_nuse > ((t->map_size * 3) / 4)) 
 		slipT_reHash(t, t->map_size * 2);
@@ -89,8 +112,8 @@ slipT_insertHash(STable* t, SString* key, slip_Value value) {
 	while (t->hash_map[pos].key != 0) {
 		pos = getHashCode(t->map_size, hashcode + getTCsequence(++i));
 		if (i > t->map_size / 2) { 
-			slipT_reHash(t, t->map_size * 2);
-			return slipT_insertHash(t, key, value);
+			slipT_reHash((slip_Obj*)t, t->map_size * 2);
+			return slipT_insertHash((slip_Obj*)t, (slip_Obj*)key, value);
 		}
 	}
 	t->hash_map[pos].key = key;
@@ -100,8 +123,17 @@ slipT_insertHash(STable* t, SString* key, slip_Value value) {
 
 
 slip_Value 
-slipT_getHash(STable* t, SString* key) {
+slipT_getHash(slip_Obj* table, slip_Obj* skey) {
 	slip_Value ans = {0};
+	STable* t;
+	if slipO_checkType(table, slipO_table_t) 
+		t = slipO_castTable(table);
+	else return ans;
+	SString* key;
+	if slipO_checkType(skey, slipO_string_t) 
+		key = slipO_castTable(skey);
+	else return ans;
+
 	if (t->map_size == 0) return ans;
 	int hashcode = getHashCode(t->map_size, key->hash);
 	int pos = hashcode; int i = 0;
@@ -113,21 +145,35 @@ slipT_getHash(STable* t, SString* key) {
 	}
 
 	// 处理元表，递归进行查找
-	slip_Value meta_table = slipT_getHash(t, meta);
+	slip_Value meta_table = slipT_getHash((slip_Obj*)t, meta);
 	if (meta_table.v.i != 0 && meta_table.t == slipV_table_t)
-		return slipT_getHash((STable*)(meta_table.v.o), key);
+		return slipT_getHash(meta_table.v.o, (slip_Obj*)key);
 	return ans;
 }
 
 
+slip_Value
+slipT_getOrInsertHashTable(slip_Obj* table, slip_Obj* skey) {
+	slip_Value ans = {0};
+	ans = slipT_getHash(table, skey);
+	if (ans.v.i == 0 || ans.t != slipV_table_t) {
+		slip_Obj* newTable = slipT_createTable();
+		slipV_setValueTable(&ans, newTable);
+		slipT_insertHash(table, skey, ans);
+	}
+	return ans;
+}
+
+
+
 int 			
-slipT_insertArray(STable* t, int index, slip_Value value) {
+slipT_insertArray(slip_Obj* t, int index, slip_Value value) {
 
 }
 
 
 slip_Value 	
-slipT_getArray(STable* t, SString* key) {
+slipT_getArray(slip_Obj* t, slip_Obj* key) {
 
 }
 

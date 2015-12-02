@@ -2,7 +2,7 @@
 * @Author: sxf
 * @Date:   2015-11-30 08:35:18
 * @Last Modified by:   sxf
-* @Last Modified time: 2015-12-02 10:15:41
+* @Last Modified time: 2015-12-02 14:25:01
 */
 
 #include "vm.h"
@@ -17,7 +17,7 @@ int
 slipV_call (slip_Core* vm, int num) {
 	slip_Value v = slipV_popValue(vm);
 	switch (v.t) {
-		case slipV_chunk_t:  return slipC_callChunk(vm, (SChunk*)(v.v.o), num); 
+		case slipV_chunk_t:  return slipC_callChunk(vm, v.v.o, num); 
 		case slipV_light_cfunc_t: return slipL_callCFunction(vm, v.v.f, num);
 	}
 }
@@ -83,7 +83,7 @@ slipV_pushNil (slip_Core* vm) {
 
 
 int
-slipV_pushTable (slip_Core* vm, STable* table) {
+slipV_pushTable (slip_Core* vm, slip_Obj* table) {
 	slip_Value v;
 	slipV_setValueTable(&v, table);
 	return slipV_pushValue(vm, v);
@@ -99,7 +99,7 @@ slipV_pushCFunc (slip_Core* vm, slip_CFunction func_pointer) {
 
 
 int
-slipV_pushSString (slip_Core* vm, SString* str) {
+slipV_pushSString (slip_Core* vm, slip_Obj* str) {
 	slip_Value v;
 	slipV_setValueString(&v, str);
 	return slipV_pushValue(vm, v);
@@ -109,14 +109,14 @@ slipV_pushSString (slip_Core* vm, SString* str) {
 int
 slipV_pushStr (slip_Core* vm, const char* str) {
 	slip_Value v;
-	SString* s = slipS_createFromStr(str);
+	slip_Obj* s = slipS_createFromStr(str);
 	slipV_setValueString(&v, s);
 	return slipV_pushValue(vm, v);
 }
 
 
 int
-slipV_pushSChunk (slip_Core* vm, SChunk* chunk) {
+slipV_pushSChunk (slip_Core* vm, slip_Obj* chunk) {
 	slip_Value v;
 	slipV_setValueChunk(&v, chunk);
 	return slipV_pushValue(vm, v);
@@ -126,7 +126,7 @@ slipV_pushSChunk (slip_Core* vm, SChunk* chunk) {
 int
 slipV_pushListNode (slip_Core* vm, slip_Node* node) {
 	slip_Value v;
-	SChunk* chunk = slipC_createChunk(node);
+	slip_Obj* chunk = slipC_createChunk(node);
 	slipV_setValueChunk(&v, chunk);
 	return slipV_pushValue(vm, v);
 }

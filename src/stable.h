@@ -2,7 +2,7 @@
 * @Author: sxf
 * @Date:   2015-11-30 17:51:42
 * @Last Modified by:   sxf
-* @Last Modified time: 2015-12-01 18:10:51
+* @Last Modified time: 2015-12-02 16:07:25
 */
 
 #ifndef STABLE_H
@@ -35,7 +35,7 @@ typedef struct STable {
 } STable;
 
 
-extern STable* 		slipT_createTable();
+extern slip_Obj* 		slipT_createTable();
 
 /**
  * @brief 初始化Table的hash表部分
@@ -44,8 +44,8 @@ extern STable* 		slipT_createTable();
  * 
  * @return 正确时返回0, 否则为异常码
  */
-extern int 			slipT_initHash(STable* t, int size);
-extern int 			slipT_initArray(STable* t, int size);
+extern int 			slipT_initHash(slip_Obj* t, int size);
+extern int 			slipT_initArray(slip_Obj* t, int size);
 
 /**
  * @brief rehash过程 重新hash表内全部元素
@@ -55,8 +55,8 @@ extern int 			slipT_initArray(STable* t, int size);
  * 
  * @return 正确时为0, 其余情况为异常码
  */
-extern int 			slipT_reHash(STable* t, int size);
-extern int 			slipT_reArray(STable* t, int size);
+extern int 			slipT_reHash(slip_Obj* t, int size);
+extern int 			slipT_reArray(slip_Obj* t, int size);
 
 
 /**
@@ -67,11 +67,13 @@ extern int 			slipT_reArray(STable* t, int size);
  * @param value 要插入的Value值
  * @return 成功返回0, 异常返回异常码
  */
-extern int 			slipT_insertHash(STable* t, SString* key, slip_Value value);
-extern slip_Value 	slipT_getHash(STable* t, SString* key);
+extern int 			slipT_insertHash(slip_Obj* table, slip_Obj* skey, slip_Value value);
+extern slip_Value 	slipT_getHash(slip_Obj* table, slip_Obj* skey);
 
-extern int 			slipT_insertArray(STable* t, int index, slip_Value value);
-extern slip_Value 	slipT_getArray(STable* t, SString* key);
+extern slip_Value 	slipT_getOrInsertHashTable(slip_Obj* table, slip_Obj* skey);
+
+extern int 			slipT_insertArray(slip_Obj* table, int index, slip_Value value);
+extern slip_Value 	slipT_getArray(slip_Obj* table, slip_Obj* key);
 
 
 

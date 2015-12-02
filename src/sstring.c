@@ -2,7 +2,7 @@
 * @Author: sxf
 * @Date:   2015-11-30 17:41:42
 * @Last Modified by:   sxf
-* @Last Modified time: 2015-12-01 10:41:02
+* @Last Modified time: 2015-12-02 14:08:14
 */
 
 #include "sstring.h"
@@ -11,8 +11,16 @@
 #include <assert.h>
 #include <string.h>
 
+#define CHECK_STR(name, src) \
+	SString* name; \
+	if slipO_checkType(src, slipO_string_t) \
+		name = slipO_castString(src); \
+	else return -1
+
+
 int 
-slipS_hash(SString* s) { 
+slipS_hash(slip_Obj* str) { 
+	CHECK_STR(s, str);
 	s->hash = slipS_hashcstr(s->data);
 	return s->hash;
 }
@@ -41,7 +49,9 @@ slipS_hashcstr(const char* s) { // 这是一个针对32位整数的hash函数, �
 
 
 int 
-slipS_equal(SString* s1, SString* s2) {
+slipS_equal(slip_Obj* str1, slip_Obj* str2) {
+	CHECK_STR(s1, str1);
+	CHECK_STR(s2, str2);
 	if (s1->hash == s2->hash) {
 		if (strcmp(s1->data, s2->data) == 0) return 1;
 	}
@@ -50,13 +60,15 @@ slipS_equal(SString* s1, SString* s2) {
 
 
 int 
-slipS_equalcstr(SString* s1, const char* s2) {
-	if (strcmp(s1->data, s2) == 0) return 1;
+slipS_equalcstr(slip_Obj* str1, const char* str2) {
+	CHECK_STR(s1, str1);
+	if (strcmp(s1->data, str2) == 0) return 1;
 	return 0;
 }
 
-SString*
-slipS_copy(SString* s) {
+slip_Obj*
+slipS_copy(slip_Obj* str) {
+	CHECK_STR(s, str);
 	SString* ns = slipS_create();
 	char* buf = (char*) malloc(s->len + 1);
 	assert(buf != NULL);
@@ -64,23 +76,26 @@ slipS_copy(SString* s) {
 	ns->data = buf;
 	ns->len = s->len;
 	ns->hash = s->hash;
-	return ns;
+	return (slip_Obj*)ns;
 }
 
-SString*
-slipS_create() {
-	return (SString*) calloc(1, sizeof(SString));
+slip_Obj*
+slipS_create() { 
+	slip_Obj* obj = (slip_Obj*) calloc(1, sizeof(SString));
+	obj->type = slipO_string_t;
+	return obj;
 }
 
-SString*
+slip_Obj*
 slipS_createFromStr(const char* str) {
-	SString* s = slipS_create();
+	slip_Obj* s = slipS_create();
 	slipS_init(s, str);
 	return s;
 }
 
-SString* 
-slipS_init(SString* s, const char* str) {
+slip_Obj* 
+slipS_init(slip_Obj* sobj, const char* str) {
+	CHECK_STR(s, sobj);
 	int len = strlen(str);
 	char* buf = (char*) malloc(len+1);
 	assert(buf != NULL);
@@ -89,5 +104,5 @@ slipS_init(SString* s, const char* str) {
 	s->data = buf;
 	s->len = len;
 	s->hash = slipS_hash(s);
-	return s;
+	return (slip_Obj*)s;
 }

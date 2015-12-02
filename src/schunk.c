@@ -2,7 +2,7 @@
 * @Author: sxf
 * @Date:   2015-12-01 16:42:01
 * @Last Modified by:   sxf
-* @Last Modified time: 2015-12-02 12:35:03
+* @Last Modified time: 2015-12-02 16:32:42
 */
 
 #include "schunk.h"
@@ -11,17 +11,16 @@
 #include <malloc.h>
 #include "sliplist.h"
 
-SChunk*  
+slip_Obj*  
 slipC_createChunk(slip_Node* node) {
 	SChunk* s = (SChunk*) calloc(1, sizeof(SChunk));
 	s->head = node;
-	return s;
+	return (slip_Obj*)s;
 }
 
 
 int
 slipC_callNode(slip_Core* vm, slip_Node* node) {
-	printf("call\n");
 	if (node->b.stype == slipL_list_t) {
 		node = node->l.child;
 		if (node->b.stype != slipL_id_t) {
@@ -49,8 +48,7 @@ slipC_callNode(slip_Core* vm, slip_Node* node) {
 				}
 			}
 			slipV_pushValue(vm, v);
-			slipV_call(vm, num);
-			printf("call done\n");
+			int ret_size = slipV_call(vm, num);
 			return 0;
 		}
 	}
@@ -59,9 +57,11 @@ slipC_callNode(slip_Core* vm, slip_Node* node) {
 
 
 int
-slipC_callChunk(slip_Core* vm, SChunk* c, int num) {
-	if (num == 0) 
-	return slipC_callNode(vm, c->head);
+slipC_callChunk(slip_Core* vm, slip_Obj* c, int num) {
+	if (num == 0) {
+		SChunk* sc = slipO_castChunk(c);
+		return slipC_callNode(vm, sc->head);
+	}
 }
 
 

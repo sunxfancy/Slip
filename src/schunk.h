@@ -2,7 +2,7 @@
 * @Author: sxf
 * @Date:   2015-12-01 16:13:25
 * @Last Modified by:   sxf
-* @Last Modified time: 2015-12-02 10:36:26
+* @Last Modified time: 2015-12-02 14:22:13
 */
 
 #ifndef CHUNK_H
@@ -19,7 +19,7 @@ typedef struct SChunk {
 } SChunk;
 
 
-extern SChunk*  	slipC_createChunk(slip_Node* node);
+extern slip_Obj*  	slipC_createChunk(slip_Node* node);
 
 
 /**
@@ -33,7 +33,7 @@ extern SChunk*  	slipC_createChunk(slip_Node* node);
 extern int 			slipC_callNode(slip_Core* vm, slip_Node* node);
 
 
-extern int 			slipC_callChunk(slip_Core* vm, SChunk* c, int num);
+extern int 			slipC_callChunk(slip_Core* vm, slip_Obj* c, int num);
 
 
 #endif // CHUNK_H

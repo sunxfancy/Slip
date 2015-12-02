@@ -2,7 +2,7 @@
 * @Author: sxf
 * @Date:   2015-11-29 09:30:04
 * @Last Modified by:   sxf
-* @Last Modified time: 2015-12-02 09:59:55
+* @Last Modified time: 2015-12-02 14:48:10
 */
 
 
@@ -24,7 +24,7 @@ typedef struct STable STable;
 struct slip_Context
 {
 	// 全局Table
-	STable* env;
+	slip_Obj* env;
 	
 	// GC 堆
 	slip_Obj* gc_heap;
