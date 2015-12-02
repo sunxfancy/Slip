@@ -2,7 +2,7 @@
 * @Author: sxf
 * @Date:   2015-11-30 17:51:42
 * @Last Modified by:   sxf
-* @Last Modified time: 2015-12-01 13:42:56
+* @Last Modified time: 2015-12-01 18:10:51
 */
 
 #ifndef STABLE_H
@@ -35,7 +35,7 @@ typedef struct STable {
 } STable;
 
 
-extern STable* 		slipT_create();
+extern STable* 		slipT_createTable();
 
 /**
  * @brief 初始化Table的hash表部分
@@ -62,8 +62,8 @@ extern int 			slipT_reArray(STable* t, int size);
 /**
  * @brief 插入hash表
  * 
- * @param t [description]
- * @param key [description]
+ * @param t Table
+ * @param key 键
  * @param value 要插入的Value值
  * @return 成功返回0, 异常返回异常码
  */
