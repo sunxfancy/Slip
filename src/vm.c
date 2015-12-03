@@ -2,7 +2,7 @@
 * @Author: sxf
 * @Date:   2015-11-30 08:35:18
 * @Last Modified by:   sxf
-* @Last Modified time: 2015-12-02 14:25:01
+* @Last Modified time: 2015-12-03 10:17:48
 */
 
 #include "vm.h"
@@ -19,6 +19,14 @@ slipV_call (slip_Core* vm, int num) {
 	switch (v.t) {
 		case slipV_chunk_t:  return slipC_callChunk(vm, v.v.o, num); 
 		case slipV_light_cfunc_t: return slipL_callCFunction(vm, v.v.f, num);
+		case slipV_light_cmacro_t: {
+			slip_Value macro = slipV_popValue(vm);
+			if (macro.v.i == 0 || macro.t != slipV_chunk_t) {
+				printf("宏调用异常\n"); return -1;
+			}
+			SChunk* c = (SChunk*)(macro.v.o);
+			return slipL_callCMacro(vm, v.v.m, c->head, num);
+		}
 	}
 }
 

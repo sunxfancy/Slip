@@ -2,7 +2,7 @@
 * @Author: sxf
 * @Date:   2015-12-01 11:14:19
 * @Last Modified by:   sxf
-* @Last Modified time: 2015-12-02 16:25:05
+* @Last Modified time: 2015-12-03 09:23:10
 */
 
 #include "stable.h"
@@ -121,6 +121,20 @@ slipT_insertHash(slip_Obj* table, slip_Obj* skey, slip_Value value) {
 	return 0;
 }
 
+static slip_Value 
+slip_gethash(STable* t, SString* key) {
+	slip_Value ans = {0};
+	if (t->map_size == 0) return ans;
+	int hashcode = getHashCode(t->map_size, key->hash);
+	int pos = hashcode; int i = 0;
+	while (t->hash_map[pos].key != 0) {
+		if (slipS_equal(t->hash_map[pos].key, key)) {
+			return t->hash_map[pos].value;			
+		}
+		pos = getHashCode(t->map_size, hashcode + getTCsequence(++i));
+	}
+	return ans;
+}
 
 slip_Value 
 slipT_getHash(slip_Obj* table, slip_Obj* skey) {
@@ -134,18 +148,11 @@ slipT_getHash(slip_Obj* table, slip_Obj* skey) {
 		key = slipO_castTable(skey);
 	else return ans;
 
-	if (t->map_size == 0) return ans;
-	int hashcode = getHashCode(t->map_size, key->hash);
-	int pos = hashcode; int i = 0;
-	while (t->hash_map[pos].key != 0) {
-		if (slipS_equal(t->hash_map[pos].key, key)) {
-			return t->hash_map[pos].value;			
-		}
-		pos = getHashCode(t->map_size, hashcode + getTCsequence(++i));
-	}
+	slip_Value ret = slip_gethash(t, key);
+	if (ret.v.i != 0) return ret;
 
 	// 处理元表，递归进行查找
-	slip_Value meta_table = slipT_getHash((slip_Obj*)t, meta);
+	slip_Value meta_table = slip_gethash(t, (SString*)meta);
 	if (meta_table.v.i != 0 && meta_table.t == slipV_table_t)
 		return slipT_getHash(meta_table.v.o, (slip_Obj*)key);
 	return ans;

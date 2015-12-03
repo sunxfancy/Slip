@@ -2,7 +2,7 @@
 * @Author: sxf
 * @Date:   2015-12-01 15:16:58
 * @Last Modified by:   sxf
-* @Last Modified time: 2015-12-02 16:19:52
+* @Last Modified time: 2015-12-03 10:03:58
 */
 
 #include "libapi.h"
@@ -82,7 +82,15 @@ slipL_regLibMacro(slip_Core* vm, const char* lib_name, const slip_RegM* func_lis
 
 int
 slipL_regGlobalCMacros(slip_Core* vm, const slip_RegM* func_list) {
-
+	while (func_list->name != NULL) {
+		const char*    	name = func_list->name;
+		slip_CMacro 	func = func_list->macro;
+		slip_Value vfunc;
+		slipV_setValueCMacro(&vfunc, func);
+		slip_Obj* key = slipS_createFromStr(name);
+		slipT_insertHash(vm->context->env, key, vfunc);
+		++func_list;
+	}
 }
 
 
@@ -96,12 +104,24 @@ slipL_callCFunction(slip_Core* vm, slip_CFunction func, int num) {
 	int ret_num = func(vm, num);
 	int pop_num = slipV_popValueNum(vm, ret_num);
 	if (pop_num != ret_num) return -1;
-	return 0;
+	return pop_num;
 }
+
+
+int
+slipL_callCMacro(slip_Core* vm, slip_CMacro func, slip_Node* node, int num) {
+	int ret_num = func(vm, node, num);
+	int pop_num = slipV_popValueNum(vm, ret_num);
+	if (pop_num != ret_num) return -1;
+	return pop_num;
+}
+
 
 
 int 		
 slipL_openStdLib(slip_Core* vm) {
 	slipL_regGlobalCfuncs(vm, testlib);
+	slipL_regGlobalCfuncs(vm, stdlib);
+	slipL_regGlobalCMacros(vm, stdmacro);
 }
 

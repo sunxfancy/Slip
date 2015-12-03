@@ -2,7 +2,7 @@
 * @Author: sxf
 * @Date:   2015-12-01 17:54:14
 * @Last Modified by:   sxf
-* @Last Modified time: 2015-12-02 12:39:46
+* @Last Modified time: 2015-12-03 08:53:17
 */
 
 #include <stdlib.h>
@@ -20,9 +20,7 @@ slipC_createCore() {
 	vm->context = slipC_createContext();
 
 	// 将全局符号表压栈
-	slip_Value etable;
-	slipV_setValueTable(&etable, vm->context->env);
-	slipS_push(&(vm->env_stack), etable);
+	slipC_pushEnvStack(vm, vm->context->env);
 	return vm;
 }
 
@@ -30,7 +28,7 @@ slipC_createCore() {
 slip_Context* 
 slipC_createContext() {
 	slip_Context* ctx = (slip_Context*) calloc(1, sizeof(slip_Context));
-	ctx->env = slipT_createTable();
+	ctx->env = slipT_createTable(); // 创建并初始化全局hash表
 	slipT_initHash(ctx->env, 128);
 	return ctx;
 }
@@ -76,3 +74,19 @@ slipC_findID(slip_Core* vm, const char* id) {
 	}
 	return ans;
 }
+
+int 			
+slipC_pushEnvStack(slip_Core* vm, slip_Obj* env) {
+	slip_Value etable;
+	slipV_setValueTable(&etable, env);
+	slipS_push(&(vm->env_stack), etable);
+	return 0;
+}
+
+
+slip_Obj*  	
+slipC_popEnvStack(slip_Core* vm) {
+	slip_Value etable = slipS_pop(&(vm->env_stack));
+	return etable.v.o;
+}
+

@@ -2,7 +2,7 @@
 * @Author: sxf
 * @Date:   2015-11-29 09:30:04
 * @Last Modified by:   sxf
-* @Last Modified time: 2015-12-02 14:48:10
+* @Last Modified time: 2015-12-03 08:49:26
 */
 
 
@@ -61,6 +61,9 @@ extern int 				slipC_loadStr(slip_Core* vm, const char* str);
  * @return 找到返回对应的value，否则返回的value.v.i == 0
  */
 extern slip_Value 		slipC_findID(slip_Core* vm, const char* id);
+
+extern int 				slipC_pushEnvStack(slip_Core* vm, slip_Obj* env);
+extern slip_Obj*  		slipC_popEnvStack(slip_Core* vm);
 
 /**
  * @brief 立即执行一次小GC

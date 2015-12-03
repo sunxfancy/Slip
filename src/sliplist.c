@@ -2,7 +2,7 @@
 * @Author: sxf
 * @Date:   2015-11-30 08:34:58
 * @Last Modified by:   sxf
-* @Last Modified time: 2015-11-30 21:28:39
+* @Last Modified time: 2015-12-03 09:06:30
 */
 
 #include "sliplist.h"
@@ -128,16 +128,17 @@ slipL_printList(slip_Node* node, int d) {
 		printf("链表空节点\n");
 		return;
 	}
-	for (int i = 0; i < d; ++i) {
-		printf("    ");
-	}
-	printList_Node(node);
-	if (node->b.stype == slipL_list_t) {
-		slip_Node* child = node->l.child;
-		list_for_each(slip_Node*, p, child)
-			slipL_printList(p, d+1);
-		list_for_each_end
-	}
+	// 这里一定要先循环, 在判断类型, 因为最外层可能不只有一个表
+	list_for_each(slip_Node*, p, node)
+		for (int i = 0; i < d; ++i) {
+			printf("    ");
+		}
+		printList_Node(p);
+		if (p->b.stype == slipL_list_t) {
+			slip_Node* child = p->l.child;
+			slipL_printList(child, d+1);
+		}	
+	list_for_each_end
 }
 
 

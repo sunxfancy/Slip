@@ -2,7 +2,7 @@
 * @Author: sxf
 * @Date:   2015-11-30 09:38:17
 * @Last Modified by:   sxf
-* @Last Modified time: 2015-12-02 14:48:41
+* @Last Modified time: 2015-12-02 22:19:02
 */
 
 
@@ -15,7 +15,7 @@
 typedef struct slip_Core slip_Core;
 
 typedef int (*slip_CFunction)(slip_Core*, int);
-typedef int (*slip_CMacro)(slip_Core*, slip_Node*);
+typedef int (*slip_CMacro)(slip_Core*, slip_Node*, int num);
 
 typedef struct slip_Reg {
 	const char* 	name;
@@ -36,5 +36,7 @@ extern int 		slipL_regGlobalCMacros(slip_Core* vm, const slip_RegM* func_list);
 
 extern int 		slipL_openStdLib(slip_Core* vm);
 extern int 		slipL_callCFunction(slip_Core* vm, slip_CFunction func, int num);
+extern int 		slipL_callCMacro(slip_Core* vm, slip_CMacro func, slip_Node* node, int num);
+
 
 #endif // LIBAPI_H
