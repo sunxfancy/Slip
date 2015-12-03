@@ -2,7 +2,7 @@
 * @Author: sxf
 * @Date:   2015-12-01 20:04:39
 * @Last Modified by:   sxf
-* @Last Modified time: 2015-12-03 16:36:43
+* @Last Modified time: 2015-12-03 17:38:06
 */
 
 #include "gtest/gtest.h"
@@ -38,13 +38,26 @@ TEST (coretest_slipC_pushEnvStack, slipC_pushEnvStack)
 TEST (coretest_slipC_findID, slipC_findID)
 {
 	slip_Core* vm = slipC_createCore();
+	slipL_openStdLib(vm);
 	slip_Obj* map = slipT_createTable();
 	slipT_initHash(map, 16);
 	slip_Value v;
 	slipV_setValueInt(&v, 12);
+	slip_Value v2;
+	slipV_setValueInt(&v2, 6);
+	slip_Value v3;
+	slipV_setValueInt(&v3, 1);
 	slipT_insertHash(map, slipS_createFromStr("x"), v);
+	slipT_insertHash(map, slipS_createFromStr("y"), v2);
+	slipT_insertHash(map, slipS_createFromStr("st"), v3);
 
 	slipC_pushEnvStack(vm, map);
 	slip_Value p = slipC_findID(vm, "x");
-	EXPECT_EQ(v.v.i, p.v.i);
+	EXPECT_EQ(12, p.v.i);
+
+	p = slipC_findID(vm, "st");
+	EXPECT_EQ(1, p.v.i);
+
+	p = slipC_findID(vm, "y");
+	EXPECT_EQ(6, p.v.i);
 }

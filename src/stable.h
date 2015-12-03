@@ -2,7 +2,7 @@
 * @Author: sxf
 * @Date:   2015-11-30 17:51:42
 * @Last Modified by:   sxf
-* @Last Modified time: 2015-12-02 16:07:25
+* @Last Modified time: 2015-12-03 18:12:16
 */
 
 #ifndef STABLE_H
@@ -69,6 +69,7 @@ extern int 			slipT_reArray(slip_Obj* t, int size);
  */
 extern int 			slipT_insertHash(slip_Obj* table, slip_Obj* skey, slip_Value value);
 extern slip_Value 	slipT_getHash(slip_Obj* table, slip_Obj* skey);
+extern slip_Value 	slipT_getHashRef(slip_Obj* table, slip_Obj* skey); // 这个一定返回引用类型
 
 extern slip_Value 	slipT_getOrInsertHashTable(slip_Obj* table, slip_Obj* skey);
 

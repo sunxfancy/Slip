@@ -2,21 +2,25 @@
 * @Author: sxf
 * @Date:   2015-12-02 21:14:37
 * @Last Modified by:   sxf
-* @Last Modified time: 2015-12-03 16:16:50
+* @Last Modified time: 2015-12-03 20:38:34
 */
 
 
 #include "slipcore.h"
 #include "libapi.h"
+#include "sliplist.h"
 #include <stdio.h>
+#include <assert.h>
 
 
 static int _print (slip_Core* vm, int num) {
-	for (int i = 0; i < num; ++i)
+	for (int i = -num; i < 0; ++i)
 	{
-		slip_Value v = slipV_popValue(vm);
-		slipV_printValue(&v);
+		slip_Value v = slipV_getValue(vm, i);
+		slipV_printValue(&v); printf("\t");
 	}
+	slipV_popValueNum(vm, num);
+	printf("\n");
 	return 0;
 }
 
@@ -27,7 +31,6 @@ static int _set (slip_Core* vm, int num) {
 
 
 static int _quote (slip_Core* vm, slip_Node* node, int num) {
-	printf("quote\n");
 	slip_Obj* obj = slipC_createChunk(node);
 	slipV_pushSChunk(vm, obj);
 	return 1;
@@ -43,13 +46,12 @@ static int _quote (slip_Core* vm, slip_Node* node, int num) {
  * @return [description]
  */
 static int _let (slip_Core* vm, slip_Node* node, int num) {
-	printf("let\n");
 	slip_Node* head = node; // 记录一下头
 	// 获取到下一个参数, 这是参数定义表
 	node = (slip_Node*)(node->link.next);
 	// 初始化一个新的局部符号表
 	slip_Obj* table = slipT_createTable();
-	slipT_initHash(table, num*2);
+	slipT_initHash(table, 16);
 	// 初始化参数表
 	int k = -num;
 	list_for_each(slip_Node*, p, node->l.child)
@@ -57,14 +59,16 @@ static int _let (slip_Core* vm, slip_Node* node, int num) {
 		slip_Obj* key = slipS_createFromStr(var);
 		if (k < 0) { // 前n个参数, 从栈中取num个值为其设初值
 			slip_Value v = slipV_getValue(vm, k);
-			slipT_insertHash(table, var, v);
+			slipT_insertHash(table, key, v);
 			++k;
 		} else { // 后面初值设置为nil
 			slip_Value v;
 			slipV_setValueInt(&v, 0);
-			slipT_insertHash(table, var, v);
+			slipT_insertHash(table, key, v);
 		}
 	list_for_each_end
+	slipV_popValueNum(vm, num); // 获取参数后将其出栈
+
 	slipC_pushEnvStack(vm, table);
 
 	// 获取到下一个参数, 是程序块的开头
@@ -83,13 +87,21 @@ static int _let (slip_Core* vm, slip_Node* node, int num) {
 
 
 static int _defun (slip_Core* vm, slip_Node* node, int num) {
-	printf("defun\n");
-	
+	node->id.data = "let"; 
+	list_node* prev = (list_node*)node;
+	node = (slip_Node*)(node->link.next);
+	const char* func_name = node->id.data;
+	printf("%s\n", func_name);
+	_list_remove(prev, node->link.next);
+	slip_Node* newlist = slipL_create_ListNode(prev);
+	slip_Obj* chunk = slipC_createChunk(newlist);
+	slip_Value v;
+	slipV_setValueChunk(&v, chunk);
+	slipC_setID(vm, func_name, v);
 	return 0;
 }
 
 static int _defmacro (slip_Core* vm, slip_Node* node, int num) {
-	printf("defmacro\n");
 	
 	return 0;
 }

@@ -2,7 +2,7 @@
 * @Author: sxf
 * @Date:   2015-12-01 17:54:14
 * @Last Modified by:   sxf
-* @Last Modified time: 2015-12-03 08:53:17
+* @Last Modified time: 2015-12-03 20:24:29
 */
 
 #include <stdlib.h>
@@ -63,17 +63,43 @@ slipC_loadStr(slip_Core* vm, const char* str) {
 slip_Value
 slipC_findID(slip_Core* vm, const char* id) {
 	int size = vm->env_stack.stack_nuse;
-	STable* nowTable;
-	slip_Value ans = {0};
-	SString* key = slipS_createFromStr(id);
+	slip_Obj* nowTable;
+	slip_Value ans = {0, 0};
+	slip_Obj* key = slipS_createFromStr(id);
 	for (int i = size; i > 0; --i) {
 		slip_Value v = slipS_get(&(vm->env_stack), i);
-		nowTable = (STable*)(v.v.o);
+		nowTable = v.v.o;
 		ans = slipT_getHash(nowTable, key);
-		if (ans.v.i != 0) return ans;
+		if (ans.t != 0) return ans;
 	}
 	return ans;
 }
+
+slip_Value
+slipC_findRef(slip_Core* vm, const char* id) {
+	int size = vm->env_stack.stack_nuse;
+	slip_Obj* nowTable;
+	slip_Value ans = {0, 0};
+	slip_Obj* key = slipS_createFromStr(id);
+	for (int i = size; i > 0; --i) {
+		slip_Value v = slipS_get(&(vm->env_stack), i);
+		nowTable = v.v.o;
+		ans = slipT_getHashRef(nowTable, key);
+		if (ans.t != 0) return ans;
+	}
+	return ans;
+}
+
+int 				
+slipC_setID(slip_Core* vm, const char* id, slip_Value value) {
+	slip_Obj* key = slipS_createFromStr(id);
+	int size = vm->env_stack.stack_nuse;
+	slip_Value v = slipS_get(&(vm->env_stack), size);
+	slip_Obj* nowTable = v.v.o;
+	slipT_insertHash(nowTable, key, value);
+	return 0;
+}
+
 
 int 			
 slipC_pushEnvStack(slip_Core* vm, slip_Obj* env) {
@@ -90,3 +116,8 @@ slipC_popEnvStack(slip_Core* vm) {
 	return etable.v.o;
 }
 
+
+int 				
+slipC_printStack(slip_Core* vm) {
+	slipS_printStack(&(vm->stack));
+}

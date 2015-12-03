@@ -2,7 +2,7 @@
 * @Author: sxf
 * @Date:   2015-11-29 10:36:57
 * @Last Modified by:   sxf
-* @Last Modified time: 2015-12-01 17:32:46
+* @Last Modified time: 2015-12-03 20:21:14
 * 
 * slip虚拟机栈的实现, 基于内核双链表实现的块状数组
 * 整个栈的索引可以是1到栈顶, -1到栈底, 0为无效值
@@ -40,6 +40,6 @@ extern slip_Value 		slipS_get(slip_Stack* stack, int index);
 extern slip_Value 		slipS_pop(slip_Stack* stack); /* 这里并不会主动调用collapse, 必须手动减小栈 */
 extern int 				slipS_push(slip_Stack* stack, slip_Value value); /* 压入新元素, 返回此时栈的大小, 即该元素的索引位置, 注意栈中元素是从1开始标号的 */
 extern int 		 		slipS_popNum(slip_Stack* stack, int num); /* 弹出栈顶的指定个元素, 返回实际弹出的元素个数, 负数为异常 */
-
+extern void				slipS_printStack(slip_Stack* stack);
 
 #endif // STACK_H

@@ -2,7 +2,7 @@
 * @Author: sxf
 * @Date:   2015-11-30 08:35:04
 * @Last Modified by:   sxf
-* @Last Modified time: 2015-12-01 17:37:26
+* @Last Modified time: 2015-12-03 20:23:00
 */
 
 #include "stack.h"
@@ -109,3 +109,15 @@ slipS_popNum(slip_Stack* stack, int num) {
 	}
 	return p;
 } /* 弹出栈顶的指定个元素, 返回实际弹出的元素个数, 负数为异常 */
+
+
+void
+slipS_printStack(slip_Stack* stack) {
+	printf("stack: ");
+	for (int i = 1; i <= stack->stack_nuse; ++i) {
+		slip_Value v = slipS_get(stack, i);
+		slipV_printValue(&v);
+		printf("  ");
+	}
+	printf("\n");
+}

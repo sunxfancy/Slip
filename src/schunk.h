@@ -2,7 +2,7 @@
 * @Author: sxf
 * @Date:   2015-12-01 16:13:25
 * @Last Modified by:   sxf
-* @Last Modified time: 2015-12-02 14:22:13
+* @Last Modified time: 2015-12-03 20:28:19
 */
 
 #ifndef CHUNK_H
@@ -30,7 +30,7 @@ extern slip_Obj*  	slipC_createChunk(slip_Node* node);
  * 
  * @return 0 为正常执行，-1 符号未找到异常， -2 调用类型不符
  */
-extern int 			slipC_callNode(slip_Core* vm, slip_Node* node);
+extern int 			slipC_callNode(slip_Core* vm, slip_Node* node, int num);
 
 
 extern int 			slipC_callChunk(slip_Core* vm, slip_Obj* c, int num);

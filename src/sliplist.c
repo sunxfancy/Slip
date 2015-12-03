@@ -2,7 +2,7 @@
 * @Author: sxf
 * @Date:   2015-11-30 08:34:58
 * @Last Modified by:   sxf
-* @Last Modified time: 2015-12-03 09:06:30
+* @Last Modified time: 2015-12-03 17:55:44
 */
 
 #include "sliplist.h"
@@ -160,6 +160,7 @@ slip_Node* slipL_parseFile(const char* path) {
 	// 打印语法树
 	printf("源文件 - %s\n", path);
 	slipL_printList(programBlock, 0);
+	printf("\n\n");
 	return programBlock;
 }
 

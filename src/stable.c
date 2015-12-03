@@ -2,7 +2,7 @@
 * @Author: sxf
 * @Date:   2015-12-01 11:14:19
 * @Last Modified by:   sxf
-* @Last Modified time: 2015-12-03 09:23:10
+* @Last Modified time: 2015-12-03 18:19:01
 */
 
 #include "stable.h"
@@ -122,23 +122,27 @@ slipT_insertHash(slip_Obj* table, slip_Obj* skey, slip_Value value) {
 }
 
 static slip_Value 
-slip_gethash(STable* t, SString* key) {
-	slip_Value ans = {0};
+slip_gethash(STable* t, SString* key, int is_ref) {
+	slip_Value ans = {0, 0};
 	if (t->map_size == 0) return ans;
 	int hashcode = getHashCode(t->map_size, key->hash);
 	int pos = hashcode; int i = 0;
 	while (t->hash_map[pos].key != 0) {
 		if (slipS_equal(t->hash_map[pos].key, key)) {
-			return t->hash_map[pos].value;			
+			if (!is_ref) return t->hash_map[pos].value;			
+			else {
+				slipV_setValueRef(&ans, &(t->hash_map[pos].value));
+				return ans;
+			}
 		}
 		pos = getHashCode(t->map_size, hashcode + getTCsequence(++i));
 	}
 	return ans;
 }
 
-slip_Value 
-slipT_getHash(slip_Obj* table, slip_Obj* skey) {
-	slip_Value ans = {0};
+static slip_Value
+slipT_getHashImpl(slip_Obj* table, slip_Obj* skey, int is_ref) {
+	slip_Value ans = {0, 0};
 	STable* t;
 	if slipO_checkType(table, slipO_table_t) 
 		t = slipO_castTable(table);
@@ -148,14 +152,24 @@ slipT_getHash(slip_Obj* table, slip_Obj* skey) {
 		key = slipO_castTable(skey);
 	else return ans;
 
-	slip_Value ret = slip_gethash(t, key);
-	if (ret.v.i != 0) return ret;
+	slip_Value ret = slip_gethash(t, key, is_ref);
+	if (ret.t != 0) return ret;
 
 	// 处理元表，递归进行查找
-	slip_Value meta_table = slip_gethash(t, (SString*)meta);
+	slip_Value meta_table = slip_gethash(t, (SString*)meta, is_ref);
 	if (meta_table.v.i != 0 && meta_table.t == slipV_table_t)
 		return slipT_getHash(meta_table.v.o, (slip_Obj*)key);
 	return ans;
+}
+
+slip_Value 
+slipT_getHash(slip_Obj* table, slip_Obj* skey) {
+	return slipT_getHashImpl(table, skey, 0);
+}
+
+slip_Value 
+slipT_getHashRef(slip_Obj* table, slip_Obj* skey) {
+	return slipT_getHashImpl(table, skey, 1);
 }
 
 
@@ -163,7 +177,7 @@ slip_Value
 slipT_getOrInsertHashTable(slip_Obj* table, slip_Obj* skey) {
 	slip_Value ans = {0};
 	ans = slipT_getHash(table, skey);
-	if (ans.v.i == 0 || ans.t != slipV_table_t) {
+	if (ans.t == 0 || ans.t != slipV_table_t) {
 		slip_Obj* newTable = slipT_createTable();
 		slipV_setValueTable(&ans, newTable);
 		slipT_insertHash(table, skey, ans);
