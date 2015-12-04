@@ -2,7 +2,7 @@
 * @Author: sxf
 * @Date:   2015-11-30 08:35:18
 * @Last Modified by:   sxf
-* @Last Modified time: 2015-12-03 10:17:48
+* @Last Modified time: 2015-12-04 17:13:20
 */
 
 #include "vm.h"
@@ -106,6 +106,14 @@ slipV_pushCFunc (slip_Core* vm, slip_CFunction func_pointer) {
 }
 
 
+int 
+slipV_pushCLightData (slip_Core* vm, void* data) {
+	slip_Value v;
+	slipV_setValueCPtr(&v, data);
+	return slipV_pushValue(vm, v);
+}
+
+
 int
 slipV_pushSString (slip_Core* vm, slip_Obj* str) {
 	slip_Value v;
@@ -139,4 +147,48 @@ slipV_pushListNode (slip_Core* vm, slip_Node* node) {
 	return slipV_pushValue(vm, v);
 }
 
+
+int 		 	
+slipV_toInt (slip_Core* vm, int index) {
+	slip_Value v = slipV_getValue(vm, index);
+	return v.v.i;
+}
+
+double 		
+slipV_toDouble (slip_Core* vm, int index) {
+	slip_Value v = slipV_getValue(vm, index);
+	return v.v.n;
+}
+
+slip_Obj* 	
+slipV_toSTable (slip_Core* vm, int index) {
+	slip_Value v = slipV_getValue(vm, index);
+	return v.v.o;
+}
+
+slip_Obj* 	
+slipV_toSString (slip_Core* vm, int index) {
+	slip_Value v = slipV_getValue(vm, index);
+	return v.v.o;
+}
+
+const char* 	
+slipV_toCStr (slip_Core* vm, int index) {
+	slip_Value v = slipV_getValue(vm, index);
+	SString* s = (SString*) (v.v.o);
+	return s->data;
+}
+
+slip_Obj*	
+slipV_toSChunk (slip_Core* vm, int index) {
+	slip_Value v = slipV_getValue(vm, index);
+	return v.v.o;
+}
+
+slip_Node*	
+slipV_toListNode (slip_Core* vm, int index) {
+	slip_Value v = slipV_getValue(vm, index);
+	SChunk* sc = (SChunk*) (v.v.o);
+	return sc->head;
+}
 
