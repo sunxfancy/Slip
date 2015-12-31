@@ -2,7 +2,7 @@
 * @Author: sxf
 * @Date:   2015-11-29 19:51:58
 * @Last Modified by:   sxf
-* @Last Modified time: 2015-12-01 20:04:02
+* @Last Modified time: 2015-12-05 15:47:45
 */
 
 #include "gtest/gtest.h"
@@ -44,7 +44,7 @@ TEST(sliplisttest_slipL_create_FloatNodeFromStr, slipL_create_FloatNodeFromStr)
 
 TEST(sliplisttest_slipL_parseString, slipL_parseString) 
 {
-	slip_Node* node = slipL_parseString("(int 3)");
+	slip_Node* node = slipL_parseString("`(int 3)");
 	ASSERT_NE(node, (void*)0);
 	slip_Node* child = node->l.child;
 	ASSERT_NE(child, (void*)0);

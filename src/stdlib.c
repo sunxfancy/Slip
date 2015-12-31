@@ -2,7 +2,7 @@
 * @Author: sxf
 * @Date:   2015-12-02 21:14:37
 * @Last Modified by:   sxf
-* @Last Modified time: 2015-12-03 20:38:34
+* @Last Modified time: 2015-12-04 17:34:59
 */
 
 
@@ -23,6 +23,35 @@ static int _print (slip_Core* vm, int num) {
 	printf("\n");
 	return 0;
 }
+
+static int _dot (slip_Core* vm, int num) {
+	
+	return 0;
+}
+
+static int _add (slip_Core* vm, int num) {
+
+	return 0;
+}
+
+static int _sub (slip_Core* vm, int num) {
+
+	return 0;
+}
+
+static int _mul (slip_Core* vm, int num) {
+
+	return 0;
+}
+
+static int _div (slip_Core* vm, int num) {
+
+	return 0;
+}
+
+
+
+
 
 static int _set (slip_Core* vm, int num) {
 
@@ -111,6 +140,11 @@ static int _defmacro (slip_Core* vm, slip_Node* node, int num) {
 
 const slip_Reg stdlib[] = {
 	{ "print", _print },
+	{ ".", _dot },
+	{ "+", _add },
+	{ "-", _sub },
+	{ "*", _mul },
+	{ "/", _div },
 	{ NULL, NULL }
 };
 

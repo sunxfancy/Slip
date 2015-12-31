@@ -21,11 +21,21 @@ char* makestring(const char* data, int len, int s);
 ;[^\n]*\n               ; /* 分号注释 */ 
 "//"[^\n]*\n            ; /* 双线注释 */ 
 
-[ \t\v\n\f]             ; /* 过滤空白字符 */
+[ \t\v\f]             ; /* 过滤空白字符 */
+
+\n+|;                   return SEP;
 
     /* 界符 */
-"("                     return '(';
-")"                     return ')';
+[()\[\]{}.:`']          return *yytext;
+    /* 运算符 */
+[+\-*/&|^~!%=,]         return *yytext;
+
+"if"                    SAVE_TOKEN; return IF;
+"else"                  SAVE_TOKEN; return ELSE;
+"defun"                 SAVE_TOKEN; return DEFUN;
+"defmacro"              SAVE_TOKEN; return DEFMACRO;
+"return"                SAVE_TOKEN; return RETURN;
+"while"                 SAVE_TOKEN; return WHILE;
 
 [a-zA-Z_][a-zA-Z0-9_]*  SAVE_TOKEN; return ID; /* 标识符 */
 
