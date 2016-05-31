@@ -1,4 +1,4 @@
-/* 
+/*
 * @Author: sxf
 * @Date:   2015-11-29 10:14:08
 * @Last Modified by:   sxf
@@ -9,15 +9,16 @@
 #define OBJECT_H
 
 
-typedef struct slip_Obj slip_Obj;
-typedef unsigned char byte_st;
 
+typedef unsigned char byte_st;
+typedef struct slip_Obj slip_Obj;
 
 struct slip_Obj {
 	slip_Obj* next;
-	byte_st mark; 
+	byte_st mark;
 	byte_st type;
 };
+
 
 #define slipO_string_t 	1
 #define slipO_table_t 	2

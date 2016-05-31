@@ -1,4 +1,4 @@
-/* 
+/*
 * @Author: sxf
 * @Date:   2015-12-02 21:14:37
 * @Last Modified by:   sxf
@@ -25,7 +25,7 @@ static int _print (slip_Core* vm, int num) {
 }
 
 static int _dot (slip_Core* vm, int num) {
-	
+
 	return 0;
 }
 
@@ -68,10 +68,10 @@ static int _quote (slip_Core* vm, slip_Node* node, int num) {
 
 /**
  * @brief 从当前栈中获取真实压栈个数的值, 存入到前x个元素中, 不足的设置为nil, 这些元素会加入新的局部符号表中
- * 
+ *
  * @param vm [description]
  * @param node [description]
- * 
+ *
  * @return [description]
  */
 static int _let (slip_Core* vm, slip_Node* node, int num) {
@@ -104,7 +104,7 @@ static int _let (slip_Core* vm, slip_Node* node, int num) {
 	node = (slip_Node*)(node->link.next);
 
 	int ret_size = 0;
-	for (list_node* p = node; p != head; p = p->next) 
+	for (list_node* p = node; p != head; p = p->next)
 	{
 		slip_Node* n = (slip_Node*) p;
 		ret_size = slipC_callNode(vm, n);
@@ -116,22 +116,22 @@ static int _let (slip_Core* vm, slip_Node* node, int num) {
 
 
 static int _defun (slip_Core* vm, slip_Node* node, int num) {
-	node->id.data = "let"; 
+	node->id.data = "let"; // 将defun替换成let
 	list_node* prev = (list_node*)node;
 	node = (slip_Node*)(node->link.next);
 	const char* func_name = node->id.data;
 	printf("%s\n", func_name);
-	_list_remove(prev, node->link.next);
-	slip_Node* newlist = slipL_create_ListNode(prev);
+	_list_remove(prev, node->link.next); // 删除函数名
+	slip_Node* newlist = (slip_Node*)slipL_create_ListNode((slip_Node*)prev);
 	slip_Obj* chunk = slipC_createChunk(newlist);
 	slip_Value v;
 	slipV_setValueChunk(&v, chunk);
-	slipC_setID(vm, func_name, v);
+	slipC_setID(vm, func_name, v);  // 记录这个代码段
 	return 0;
 }
 
 static int _defmacro (slip_Core* vm, slip_Node* node, int num) {
-	
+
 	return 0;
 }
 

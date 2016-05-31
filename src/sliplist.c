@@ -1,4 +1,4 @@
-/* 
+/*
 * @Author: sxf
 * @Date:   2015-11-30 08:34:58
 * @Last Modified by:   sxf
@@ -23,7 +23,7 @@
 
 #define mallocNode(type, ele) type* ele = (type*) malloc(sizeof(type))
 
-slip_IntNode* 		
+slip_IntNode*
 slipL_create_IntNode(int num) {
 	mallocNode(slip_IntNode, n);
 	NODE_LIST_CREATE_INIT(n);
@@ -32,7 +32,7 @@ slipL_create_IntNode(int num) {
 	return n;
 }
 
-slip_FloatNode* 		
+slip_FloatNode*
 slipL_create_FloatNode(double num) {
 	mallocNode(slip_FloatNode, n);
 	NODE_LIST_CREATE_INIT(n);
@@ -41,7 +41,7 @@ slipL_create_FloatNode(double num) {
 	return n;
 }
 
-slip_StringNode* 	
+slip_StringNode*
 slipL_create_StringNode(const char* str) {
 	mallocNode(slip_StringNode, n);
 	NODE_LIST_CREATE_INIT(n);
@@ -52,7 +52,7 @@ slipL_create_StringNode(const char* str) {
 	return n;
 }
 
-slip_IDNode* 		
+slip_IDNode*
 slipL_create_IDNode(const char* str) {
 	mallocNode(slip_IDNode, n);
 	NODE_LIST_CREATE_INIT(n);
@@ -63,7 +63,7 @@ slipL_create_IDNode(const char* str) {
 	return n;
 }
 
-slip_ListNode* 		
+slip_ListNode*
 slipL_create_ListNode(slip_Node* node) {
 	mallocNode(slip_ListNode, n);
 	NODE_LIST_CREATE_INIT(n);
@@ -72,43 +72,50 @@ slipL_create_ListNode(slip_Node* node) {
 	return n;
 }
 
-slip_IntNode* 		
+slip_IntNode*
 slipL_create_IntNodeFromStr(const char* str) {
 	int value = strtol(str, NULL, 0);
 	return slipL_create_IntNode(value);
 }
 
-slip_FloatNode* 		
+slip_FloatNode*
 slipL_create_FloatNodeFromStr(const char* str) {
 	double value = atof(str);
 	printf("value=%.2f\n", value);
 	return slipL_create_FloatNode(value);
 }
 
-slip_Node* 		
+slip_Node*
 slipL_makeList(int num, ...) {
-	va_list argp; slip_Node* para = NULL;  
-	slip_Node* ans = NULL;  
-	va_start( argp, num );    
-    for (int i = 0; i < num; ++i) {    
-        para = va_arg( argp, slip_Node* );  
-        if ( ans == NULL )    
+	va_list argp; slip_Node* para = NULL;
+	slip_Node* ans = NULL;
+	va_start( argp, num );
+    for (int i = 0; i < num; ++i) {
+        para = va_arg( argp, slip_Node* );
+        if ( ans == NULL )
         	ans = para;
         else slipL_addBrother(ans, para);
-    }    
+    }
     va_end( argp );
     return ans;
 }
 
-slip_NodeType		
+slip_NodeType
 slipL_getType(slip_Node* node) {
 	return node->b.stype;
 }
 
-void		 			
+void
 slipL_addBrother(slip_Node* node, slip_Node* add_node) {
 	list_add(&(node->b.link), &(add_node->b.link));
 }
+
+void
+slipL_concat(slip_Node* node, slip_Node* add_node) {
+	list_concat(&(node->b.link), &(add_node->b.link));
+}
+
+
 
 static void
 printList_Node(slip_Node* node) {
@@ -122,7 +129,7 @@ printList_Node(slip_Node* node) {
 	printf("\n");
 }
 
-void					
+void
 slipL_printList(slip_Node* node, int d) {
 	if (node == NULL) {
 		printf("链表空节点\n");
@@ -137,7 +144,7 @@ slipL_printList(slip_Node* node, int d) {
 		if (p->b.stype == slipL_list_t) {
 			slip_Node* child = p->l.child;
 			slipL_printList(child, d+1);
-		}	
+		}
 	list_for_each_end
 }
 
@@ -154,8 +161,8 @@ slip_Node* slipL_parseFile(const char* path) {
 		printf("找不到程序源文件: %s\n", path);
 		return 0;
 	}
-	slip_reset_file(file_in); 
-	yyparse(); 
+	slip_reset_file(file_in);
+	yyparse();
 	fclose(file_in);
 	// 打印语法树
 	printf("源文件 - %s\n", path);
@@ -181,4 +188,3 @@ slip_Node* slipL_parseString(const char* str) {
 	slipL_printList(programBlock, 0);
 	return programBlock;
 }
-
