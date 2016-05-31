@@ -62,5 +62,5 @@ TEST(sliplisttest_slipL_addBrother, slipL_addBrother)
 	EXPECT_EQ(child->b.stype, slipL_id_t);
 
 	slip_Node* child2 = (slip_Node*) (child->link.next);
-	EXPECT_EQ(child2->b.stype, slipL_int_t);
+	EXPECT_EQ(child2->b.stype, slipL_id_t);
 }

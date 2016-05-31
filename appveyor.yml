@@ -1,0 +1,17 @@
+platform:
+  - x86
+  - x64
+
+configuration:
+  - Release
+
+clone_depth: 3                      # clone entire repository history if not defined
+
+
+before_build:
+  - mkdir build
+  - cd build
+  - cmake ..
+
+build_script:
+  - msbuild /p:Configuration=Release "sliper.vcxproj"
