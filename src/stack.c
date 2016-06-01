@@ -6,33 +6,33 @@
 */
 
 #include "stack.h"
-#include <malloc.h>
+#include <stdlib.h>
 #include <assert.h>
 
-slip_StackBlock* 
+slip_StackBlock*
 slipS_createBlock() {
 	slip_StackBlock* block = (slip_StackBlock*) calloc(1, sizeof(slip_StackBlock));
-	return block;	
+	return block;
 }
 
 #define GET_LIST_NODE(block) (&(block->link))
 
-void 		
+void
 slipS_extend(slip_Stack* stack){
 	slip_StackBlock* block = slipS_createBlock();
 	assert(block != NULL);
 	if (stack->block_head == NULL) {
 		stack->block_head = block;
 		stack->stack_size += BLOCK_SIZE;
-		return;		
-	} 
-	list_add(GET_LIST_NODE(stack->block_head), 
+		return;
+	}
+	list_add(GET_LIST_NODE(stack->block_head),
 			 GET_LIST_NODE(block));
 	stack->stack_size += BLOCK_SIZE;
 }    /* 扩展整个栈, 新增一个Block */
 
 
-void 		
+void
 slipS_collapse(slip_Stack* stack){
 	void* p = list_remove_last(GET_LIST_NODE(stack->block_head));
 	free(p);
@@ -66,7 +66,7 @@ stack_push_z(slip_Stack* stack, int n, slip_Value value)
 }
 
 
-slip_Value 	
+slip_Value
 slipS_get(slip_Stack* stack, int index){
 	if (0 < index && index <= stack->stack_nuse) {
 		return stack_get_z(stack, index);
@@ -79,7 +79,7 @@ slipS_get(slip_Stack* stack, int index){
 }
 
 
-slip_Value 	
+slip_Value
 slipS_pop(slip_Stack* stack){
 	if ( stack->stack_nuse > 0 ) {
 		return stack_get_z(stack, stack->stack_nuse--); // 由于是用不安去的方法,可以直接写--
@@ -89,12 +89,12 @@ slipS_pop(slip_Stack* stack){
 } /* 这里并不会主动调用collapse, 必须手动减小栈 */
 
 
-int 			
+int
 slipS_push(slip_Stack* stack, slip_Value value){
 	if ( stack->stack_nuse < stack->stack_size ) {
 		stack_push_z(stack, ++(stack->stack_nuse), value);
 		return 0;
-	} 
+	}
 	return -1;
 } /* 压入新元素, 返回此时栈的大小, 即该元素的索引位置, 注意栈中元素是从1开始标号的 */
 

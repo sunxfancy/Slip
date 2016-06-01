@@ -8,7 +8,7 @@
 #include "stable.h"
 #include "sstring.h"
 #include <stdlib.h>
-#include <malloc.h>
+#include <stdlib.h>
 
 
 static slip_Obj* meta = NULL;
