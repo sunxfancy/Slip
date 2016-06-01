@@ -1,6 +1,11 @@
 Slip
 ======
 
+[![Build Status](https://travis-ci.org/sunxfancy/Slip.svg?branch=master)](https://travis-ci.org/sunxfancy/Slip)
+
+[![Build status](https://ci.appveyor.com/api/projects/status/e72qy8m89e32187p?svg=true)](https://ci.appveyor.com/project/sunxfancy/slip)
+
+
 Slip一门嵌入式lisp风格语言, lisp功能很强大, 但有时我们又不希望使用标准lisp库, 如果能和C方便的交互, 调用C函数, 而不是一般的lisp程序库, 那么也可定制性非常强, 我们可以自由的在上面创造各种语法和表达, 定义适合自身的宏, 而不再使用lisp本身定义的那些程序库.
 
 Slip的设计思路和lua很接近, 将绝大部分功能实现放置到宿主语言中, 而语言本身非常小巧和简洁, 专为定制化DSL功能而设计。Slip使用纯C实现, 使用c99标准库, 不依赖其他任何组件.
