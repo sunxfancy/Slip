@@ -7,6 +7,18 @@ configuration:
 
 clone_depth: 3                      # clone entire repository history if not defined
 
+cache:
+  - win_flex_bison-2.4.5.zip
+environment:
+  WINFLEXBISON_ARCHIVE: win_flex_bison-2.4.5.zip
+
+install:
+  - if not exist "%WINFLEXBISON_ARCHIVE%" appveyor DownloadFile "http://downloads.sourceforge.net/project/winflexbison/%WINFLEXBISON_ARCHIVE%"
+  - 7z x -y -owinflexbison\ "%WINFLEXBISON_ARCHIVE%" > nul
+  - set Path=%CD%\winflexbison;%Path%
+  - win_flex --version
+  - win_bison --version
+
 
 before_build:
   - mkdir build
