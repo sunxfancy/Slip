@@ -1,6 +1,7 @@
 %{
 
 #include <stdio.h>
+#include <stdlib.h> 
 #include "sliplist.h"
 
 #define YYERROR_VERBOSE 1
