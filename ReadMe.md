@@ -2,7 +2,6 @@ Slip
 ======
 
 [![Build Status](https://travis-ci.org/sunxfancy/Slip.svg?branch=master)](https://travis-ci.org/sunxfancy/Slip)
-
 [![Build status](https://ci.appveyor.com/api/projects/status/e72qy8m89e32187p?svg=true)](https://ci.appveyor.com/project/sunxfancy/slip)
 
 
