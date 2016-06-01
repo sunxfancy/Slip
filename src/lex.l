@@ -1,7 +1,7 @@
 %{
 
 #include "parser.h"
-#include <malloc.h>
+#include <stdlib.h>
 
 #define SAVE_TOKEN     yylval.str = maketoken(yytext, yyleng)
 #define SAVE_STRING    yylval.str = makestring(yytext, yyleng, 2)
@@ -14,10 +14,21 @@ int haveSep;
 int oldSep;
 #define CLR oldSep=haveSep;haveSep=0
 
+#ifdef _WIN32
+
+/*windows compatibility case*/  
+#define YY_NO_UNISTD_H
+#include <io.h>  
+#define isatty _isatty  
+#define fileno _fileno  
+
+#endif
+
 %}
 
 %option yylineno
 %option noyywrap
+
 %%
 
 "/*"([^\*]|(\*)*[^\*/])*(\*)*"*/" ; /* 就是这种注释 */
