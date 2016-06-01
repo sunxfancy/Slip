@@ -9,6 +9,9 @@
 #include "slipcore.h"
 #include "libapi.h"
 #include "sliplist.h"
+#include "schunk.h"
+#include "stable.h"
+#include "sstring.h"
 #include <stdio.h>
 #include <assert.h>
 
@@ -49,11 +52,7 @@ static int _div (slip_Core* vm, int num) {
 	return 0;
 }
 
-
-
-
-
-static int _set (slip_Core* vm, int num) {
+static int _set (slip_Core* vm, slip_Node* node, int num) {
 
 	return 0;
 }
@@ -101,13 +100,13 @@ static int _let (slip_Core* vm, slip_Node* node, int num) {
 	slipC_pushEnvStack(vm, table);
 
 	// 获取到下一个参数, 是程序块的开头
-	node = (slip_Node*)(node->link.next);
+	list_node* p = node->link.next;
 
 	int ret_size = 0;
-	for (list_node* p = node; p != head; p = p->next)
+	for (; p != (list_node*)head; p = p->next)
 	{
 		slip_Node* n = (slip_Node*) p;
-		ret_size = slipC_callNode(vm, n);
+		ret_size = slipC_callNode(vm, n, 0);
 	}
 
 	slipC_popEnvStack(vm);

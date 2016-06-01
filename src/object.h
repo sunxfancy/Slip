@@ -12,6 +12,7 @@
 
 typedef unsigned char byte_st;
 typedef struct slip_Obj slip_Obj;
+typedef union slip_ObjPtr slip_ObjPtr;
 
 struct slip_Obj {
 	slip_Obj* next;
@@ -19,6 +20,12 @@ struct slip_Obj {
 	byte_st type;
 };
 
+union slip_ObjPtr {
+	struct slip_Obj* o;
+	struct SString*  s;
+	struct STable*   t;
+	struct SChunk*   c;
+};
 
 #define slipO_string_t 	1
 #define slipO_table_t 	2
@@ -28,7 +35,7 @@ struct slip_Obj {
 #define slipO_castString(obj) (SString*)(obj)
 #define slipO_castTable(obj) (STable*)(obj)
 #define slipO_castChunk(obj) (SChunk*)(obj)
-
+#define slipO_castObj(obj) (slip_Obj*)(obj)
 
 
 #endif // OBJECT_H

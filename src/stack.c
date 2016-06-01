@@ -1,4 +1,4 @@
-/* 
+/*
 * @Author: sxf
 * @Date:   2015-11-30 08:35:04
 * @Last Modified by:   sxf
@@ -7,6 +7,7 @@
 
 #include "stack.h"
 #include <stdlib.h>
+#include <stdio.h>
 #include <assert.h>
 
 slip_StackBlock*
@@ -74,7 +75,7 @@ slipS_get(slip_Stack* stack, int index){
 	if (-(stack->stack_nuse) <= index && index < 0) {
 		return stack_get_z(stack, stack->stack_nuse + index + 1);
 	}
-	slip_Value ans = {0};
+	slip_Value ans = {{0}};
 	return ans;
 }
 
@@ -84,7 +85,7 @@ slipS_pop(slip_Stack* stack){
 	if ( stack->stack_nuse > 0 ) {
 		return stack_get_z(stack, stack->stack_nuse--); // 由于是用不安去的方法,可以直接写--
 	}
-	slip_Value ans = {0};
+	slip_Value ans = {{0}};
 	return ans;
 } /* 这里并不会主动调用collapse, 必须手动减小栈 */
 

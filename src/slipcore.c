@@ -1,4 +1,4 @@
-/* 
+/*
 * @Author: sxf
 * @Date:   2015-12-01 17:54:14
 * @Last Modified by:   sxf
@@ -10,9 +10,9 @@
 #include "stable.h"
 #include "vm.h"
 #include "sliplist.h"
+#include "sstring.h"
 
-
-slip_Core* 	
+slip_Core*
 slipC_createCore() {
 	slip_Core* vm = (slip_Core*) calloc(1, sizeof(slip_Core));
 	slipS_extend(&(vm->env_stack));
@@ -25,7 +25,7 @@ slipC_createCore() {
 }
 
 
-slip_Context* 
+slip_Context*
 slipC_createContext() {
 	slip_Context* ctx = (slip_Context*) calloc(1, sizeof(slip_Context));
 	ctx->env = slipT_createTable(); // 创建并初始化全局hash表
@@ -38,6 +38,7 @@ slipC_createContext() {
 int
 slipC_close(slip_Core* vm) {
 
+	return 0;
 }
 
 
@@ -48,7 +49,7 @@ int
 slipC_loadFile(slip_Core* vm, const char* path) {
 	slip_Node* l = slipL_parseFile(path);
 	slipV_pushListNode(vm, l);
-	slipV_call(vm, 0);
+	return slipV_call(vm, 0);
 }
 
 
@@ -56,7 +57,7 @@ int
 slipC_loadStr(slip_Core* vm, const char* str) {
 	slip_Node* l = slipL_parseString(str);
 	slipV_pushListNode(vm, l);
-	slipV_call(vm, 0);
+	return slipV_call(vm, 0);
 }
 
 
@@ -64,7 +65,7 @@ slip_Value
 slipC_findID(slip_Core* vm, const char* id) {
 	int size = vm->env_stack.stack_nuse;
 	slip_Obj* nowTable;
-	slip_Value ans = {0, 0};
+	slip_Value ans = {{0}, 0};
 	slip_Obj* key = slipS_createFromStr(id);
 	for (int i = size; i > 0; --i) {
 		slip_Value v = slipS_get(&(vm->env_stack), i);
@@ -79,7 +80,7 @@ slip_Value
 slipC_findRef(slip_Core* vm, const char* id) {
 	int size = vm->env_stack.stack_nuse;
 	slip_Obj* nowTable;
-	slip_Value ans = {0, 0};
+	slip_Value ans = {{0}, 0};
 	slip_Obj* key = slipS_createFromStr(id);
 	for (int i = size; i > 0; --i) {
 		slip_Value v = slipS_get(&(vm->env_stack), i);
@@ -90,7 +91,7 @@ slipC_findRef(slip_Core* vm, const char* id) {
 	return ans;
 }
 
-int 				
+int
 slipC_setID(slip_Core* vm, const char* id, slip_Value value) {
 	slip_Obj* key = slipS_createFromStr(id);
 	int size = vm->env_stack.stack_nuse;
@@ -101,7 +102,7 @@ slipC_setID(slip_Core* vm, const char* id, slip_Value value) {
 }
 
 
-int 			
+int
 slipC_pushEnvStack(slip_Core* vm, slip_Obj* env) {
 	slip_Value etable;
 	slipV_setValueTable(&etable, env);
@@ -110,14 +111,15 @@ slipC_pushEnvStack(slip_Core* vm, slip_Obj* env) {
 }
 
 
-slip_Obj*  	
+slip_Obj*
 slipC_popEnvStack(slip_Core* vm) {
 	slip_Value etable = slipS_pop(&(vm->env_stack));
 	return etable.v.o;
 }
 
 
-int 				
+int
 slipC_printStack(slip_Core* vm) {
 	slipS_printStack(&(vm->stack));
+	return 0;
 }

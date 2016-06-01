@@ -1,4 +1,4 @@
-/* 
+/*
 * @Author: sxf
 * @Date:   2015-11-30 08:35:18
 * @Last Modified by:   sxf
@@ -11,13 +11,14 @@
 #include "sstring.h"
 #include "stable.h"
 #include "schunk.h"
+#include "stdio.h"
 
 
 int
 slipV_call (slip_Core* vm, int num) {
 	slip_Value v = slipV_popValue(vm);
 	switch (v.t) {
-		case slipV_chunk_t:  return slipC_callChunk(vm, v.v.o, num); 
+		case slipV_chunk_t:  return slipC_callChunk(vm, v.v.o, num);
 		case slipV_light_cfunc_t: return slipL_callCFunction(vm, v.v.f, num);
 		case slipV_light_cmacro_t: {
 			slip_Value macro = slipV_popValue(vm);
@@ -27,6 +28,9 @@ slipV_call (slip_Core* vm, int num) {
 			SChunk* c = (SChunk*)(macro.v.o);
 			return slipL_callCMacro(vm, v.v.m, c->head, num);
 		}
+		default:
+			printf("调用异常，类型不可调用\n");
+			return -1;
 	}
 }
 
@@ -106,7 +110,7 @@ slipV_pushCFunc (slip_Core* vm, slip_CFunction func_pointer) {
 }
 
 
-int 
+int
 slipV_pushCLightData (slip_Core* vm, void* data) {
 	slip_Value v;
 	slipV_setValueCPtr(&v, data);
@@ -148,47 +152,46 @@ slipV_pushListNode (slip_Core* vm, slip_Node* node) {
 }
 
 
-int 		 	
+int
 slipV_toInt (slip_Core* vm, int index) {
 	slip_Value v = slipV_getValue(vm, index);
 	return v.v.i;
 }
 
-double 		
+double
 slipV_toDouble (slip_Core* vm, int index) {
 	slip_Value v = slipV_getValue(vm, index);
 	return v.v.n;
 }
 
-slip_Obj* 	
+slip_Obj*
 slipV_toSTable (slip_Core* vm, int index) {
 	slip_Value v = slipV_getValue(vm, index);
 	return v.v.o;
 }
 
-slip_Obj* 	
+slip_Obj*
 slipV_toSString (slip_Core* vm, int index) {
 	slip_Value v = slipV_getValue(vm, index);
 	return v.v.o;
 }
 
-const char* 	
+const char*
 slipV_toCStr (slip_Core* vm, int index) {
 	slip_Value v = slipV_getValue(vm, index);
 	SString* s = (SString*) (v.v.o);
 	return s->data;
 }
 
-slip_Obj*	
+slip_Obj*
 slipV_toSChunk (slip_Core* vm, int index) {
 	slip_Value v = slipV_getValue(vm, index);
 	return v.v.o;
 }
 
-slip_Node*	
+slip_Node*
 slipV_toListNode (slip_Core* vm, int index) {
 	slip_Value v = slipV_getValue(vm, index);
 	SChunk* sc = (SChunk*) (v.v.o);
 	return sc->head;
 }
-
