@@ -1,4 +1,4 @@
-/* 
+/*
 * @Author: sxf
 * @Date:   2015-12-01 16:42:01
 * @Last Modified by:   sxf
@@ -9,11 +9,11 @@
 #include "vm.h"
 #include "slipcore.h"
 #include "stack.h"
-#include <malloc.h>
+#include <stdlib.h>
 #include <assert.h>
 #include "sliplist.h"
 
-slip_Obj*  
+slip_Obj*
 slipC_createChunk(slip_Node* node) {
 	SChunk* s = (SChunk*) calloc(1, sizeof(SChunk));
 	s->head = node;
@@ -74,7 +74,7 @@ slipC_callNode(slip_Core* vm, slip_Node* node, int num) {
 		case slipL_int_t : slipV_pushInt(vm, node->i.value); return 1;
 		case slipL_float_t : slipV_pushDouble(vm, node->f.value); return 1;
 		case slipL_string_t: slipV_pushStr(vm, node->s.data); return 1;
-		case slipL_list_t: return slip_callNodeList(vm, node->l.child, num); 
+		case slipL_list_t: return slip_callNodeList(vm, node->l.child, num);
 	}
 	printf("该Chunk无法调用\n");
 	return -1;
@@ -92,5 +92,3 @@ slipC_callChunk(slip_Core* vm, slip_Obj* c, int num) {
 	list_for_each_end
 	return ret_size;
 }
-
-
