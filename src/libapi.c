@@ -1,4 +1,4 @@
-/* 
+/*
 * @Author: sxf
 * @Date:   2015-12-01 15:16:58
 * @Last Modified by:   sxf
@@ -13,7 +13,7 @@
 #include "slip_stdlib.h"
 #include "vm.h"
 
-int 
+int
 slipL_regLib(slip_Core* vm, const char* lib_name, const slip_Reg* func_list) {
 	// 检查全局环境中有无该库，有则继续向其中添加一个新的
 	slip_Obj* libkey = slipS_createFromStr(lib_name);
@@ -39,17 +39,19 @@ slipL_regLib(slip_Core* vm, const char* lib_name, const slip_Reg* func_list) {
 }
 
 
-int 
+int
 slipL_regGlobalCfuncs(slip_Core* vm, const slip_Reg* func_list) {
 	while (func_list->name != NULL) {
 		const char*    name = func_list->name;
 		slip_CFunction func = func_list->func;
+		if (func == NULL) return -1; // 存在不合理的func指针
 		slip_Value vfunc;
 		slipV_setValueCFunc(&vfunc, func);
 		slip_Obj* key = slipS_createFromStr(name);
 		slipT_insertHash(vm->context->env, key, vfunc);
 		++func_list;
 	}
+	return 0;
 }
 
 
@@ -60,7 +62,7 @@ slipL_regLibMacro(slip_Core* vm, const char* lib_name, const slip_RegM* func_lis
 	slip_Value libv = slipT_getOrInsertHashTable(vm->context->env, libkey);
 	slip_Obj* lib_table = libv.v.o;
 	int i = 0;
-	const slip_Reg* list = func_list;
+	const slip_RegM* list = func_list;
 	while (list->name != NULL) {
 		++list; ++i;
 	}
@@ -85,12 +87,14 @@ slipL_regGlobalCMacros(slip_Core* vm, const slip_RegM* func_list) {
 	while (func_list->name != NULL) {
 		const char*    	name = func_list->name;
 		slip_CMacro 	func = func_list->macro;
+		if (func == NULL) return -1; // 存在不合理的func指针
 		slip_Value vfunc;
 		slipV_setValueCMacro(&vfunc, func);
 		slip_Obj* key = slipS_createFromStr(name);
 		slipT_insertHash(vm->context->env, key, vfunc);
 		++func_list;
 	}
+	return 0;
 }
 
 
@@ -118,10 +122,10 @@ slipL_callCMacro(slip_Core* vm, slip_CMacro func, slip_Node* node, int num) {
 
 
 
-int 		
+int
 slipL_openStdLib(slip_Core* vm) {
 	slipL_regGlobalCfuncs(vm, testlib);
 	slipL_regGlobalCfuncs(vm, stdlib);
 	slipL_regGlobalCMacros(vm, stdmacro);
+	return 0;
 }
-

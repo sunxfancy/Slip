@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include "sliplist.h"
+#include <stdio.h>
 
 slip_Obj*
 slipC_createChunk(slip_Node* node) {
@@ -57,6 +58,7 @@ slip_callNodeList(slip_Core* vm, slip_Node* node, int num) {
 		int ret_size = slipV_call(vm, num);
 		return ret_size;
 	}
+	return -1;
 }
 
 

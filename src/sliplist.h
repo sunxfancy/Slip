@@ -105,9 +105,8 @@ extern void		 			slipL_addBrother(slip_Node* node, slip_Node* add_node);
 /**
  * 连接两个链表，将第二个链表连接到第一个链表的末尾
  * @method slipL_concat
- * @param  node         [description]
- * @param  add_node     [description]
- * @return              [description]
+ * @param  node         第一个链表首节点
+ * @param  add_node     第二个链表首节点
  */
 extern void		 			slipL_concat(slip_Node* node, slip_Node* add_node);
 
@@ -134,13 +133,13 @@ extern slip_Node* 			slipL_parseString(const char* str);
 
 static inline slip_Node*
 slipL_forward(slip_Node* node) {
-	return (slip_Node*) node->link.next;
+	return (slip_Node*) (node->link.next);
 }
 
 
 static inline slip_Node*
 slipL_backward(slip_Node* node) {
-	return (slip_Node*) node->link.prev;
+	return (slip_Node*) (node->link.prev);
 }
 
 
