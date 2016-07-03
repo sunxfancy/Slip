@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Slip by sunxfancy</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Slip</h1>
+      <h2 class="project-tagline">A lisp style language</h2>
+      <a href="https://github.com/sunxfancy/Slip" class="btn">View on GitHub</a>
+      <a href="https://github.com/sunxfancy/Slip/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/sunxfancy/Slip/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="slip" class="anchor" href="#slip" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Slip</h1>
+
+<p><a href="https://travis-ci.org/sunxfancy/Slip"><img src="https://travis-ci.org/sunxfancy/Slip.svg?branch=master" alt="Build Status"></a>
+<a href="https://ci.appveyor.com/project/sunxfancy/slip"><img src="https://ci.appveyor.com/api/projects/status/e72qy8m89e32187p?svg=true" alt="Build status"></a>
+<a href="https://codecov.io/gh/sunxfancy/Slip"><img src="https://codecov.io/gh/sunxfancy/Slip/branch/master/graph/badge.svg" alt="codecov"></a></p>
+
+<p>Slip一门嵌入式lisp风格语言, lisp功能很强大, 但有时我们又不希望使用标准lisp库, 如果能和C方便的交互, 调用C函数, 而不是一般的lisp程序库, 那么也可定制性非常强, 我们可以自由的在上面创造各种语法和表达, 定义适合自身的宏, 而不再使用lisp本身定义的那些程序库.</p>
+
+<p>Slip的设计思路和lua很接近, 将绝大部分功能实现放置到宿主语言中, 而语言本身非常小巧和简洁, 专为定制化DSL功能而设计。Slip使用纯C实现, 使用c99标准库, 不依赖其他任何组件.</p>
+
+<p>本项目正在开发中, 将会陆续添加各种lisp语言特性.</p>
+
+<h3>
+<a id="项目构建" class="anchor" href="#%E9%A1%B9%E7%9B%AE%E6%9E%84%E5%BB%BA" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>项目构建</h3>
+
+<p>本项目使用CMake构建, 编译前请先安装CMake, 除标准库外不依赖其他任何C库</p>
+
+<p>然后执行如下指令:</p>
+
+<pre><code>    mkdir build
+    cd build
+    cmake ..
+    make
+</code></pre>
+
+<p>构建好的可执行文件会放置到bin目录下, 生成的链接库文件在build目录下
+默认使用clang构建, 如果没有, 可以将CMakeLists下的编译器设置换成gcc或mingw-gcc:</p>
+
+<pre><code>SET (CMAKE_C_COMPILER_ENV_VAR "clang")
+</code></pre>
+
+<h3>
+<a id="文档生成" class="anchor" href="#%E6%96%87%E6%A1%A3%E7%94%9F%E6%88%90" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>文档生成</h3>
+
+<p>本项目文档存放于doc目录下, 为md文本格式
+同时使用doxygen生成文档, 需要先安装doxygen工具.
+然后在build目录下执行:</p>
+
+<pre><code>    make doc
+</code></pre>
+
+<p>生成html和latex版的文档, 推荐使用html网页版, 较为方便</p>
+
+<h3>
+<a id="测试构建" class="anchor" href="#%E6%B5%8B%E8%AF%95%E6%9E%84%E5%BB%BA" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>测试构建</h3>
+
+<p>本项目的测试框架使用gtest, 默认编译是不开启test编译的, 如需运行测试, 请打开CMakeLists下的编译开关
+并且确保电脑上配置有gtest库
+测试使用C++编译环境, 默认为clang++, 需要修改的请自行更改test下的CMakeLists配置文件</p>
+
+<h3>
+<a id="代码示例" class="anchor" href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>代码示例</h3>
+
+<p>C风格代码：</p>
+
+<pre><code>defun work(x) {
+    print("work1:", x);
+    print("work2:", x);
+    print("work3:", x);
+}
+
+work(15);
+</code></pre>
+
+<p>Lisp风格代码</p>
+
+<pre><code>`(defun write (x y)   ; 这里是定义函数
+    (print x y x)    ; 这是库里面的函数
+)
+
+`(let (x y)         ; let宏负责开启一个局部环境, 并且你可以在let 后面声明一些局部变量
+    (print x y)
+    (hello)         ; 测试用C函数
+)
+
+`(write "ok" "test") ; 调用函数
+</code></pre>
+
+<p>两者是等价的，可以在同一文件中混用。</p>
+
+<h3>
+<a id="嵌入式用例" class="anchor" href="#%E5%B5%8C%E5%85%A5%E5%BC%8F%E7%94%A8%E4%BE%8B" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>嵌入式用例</h3>
+
+<p>这款语言仿照lua的设计思路制成, 使用方法很接近, C接口通过从虚拟机的栈里获取参数, 返回时自行压栈</p>
+
+<p>开启一个虚拟机非常方便, 可以用如下代码:</p>
+
+<pre><code>    slip_Core* vm = slipC_createCore(); // 启动一个虚拟机内核
+    slipL_openStdLib(vm);               // 打开标准库
+    slipC_loadFile(vm, file_in_name);   // 加载一个文件
+</code></pre>
+
+<p>栈的索引 1-栈顶 -1到栈底
+栈上元素的可以用函数获取到:</p>
+
+<pre><code>    slipV_getValue (slip_Core* vm, int index);
+</code></pre>
+
+<p>定义C接口函数示例:</p>
+
+<pre><code>static int _print (slip_Core* vm, int num) {  // print函数原型
+    for (int i = -num; i &lt; 0; ++i)      // 从-num 到 -1, 是最后压栈的num个元素
+    {
+        slip_Value v = slipV_getValue(vm, i);
+        slipV_printValue(&amp;v); printf("\t");
+    }
+    slipV_popValueNum(vm, num); // 弹出元素
+    printf("\n");
+    return 0;  // 返回压栈元素个数
+}
+
+const slip_Reg stdlib[] = {  // 注册结构体
+    { "print", _print },
+    { NULL, NULL }
+};
+</code></pre>
+
+<p>然后在创建虚拟机后, 执行注册函数:</p>
+
+<pre><code>    slipL_regGlobalCfuncs(vm, stdlib); // 注册C函数
+    slipL_regGlobalCMacros(vm, stdmacro); // 注册C宏
+</code></pre>
+
+<p>MIT 协议</p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/sunxfancy/Slip">Slip</a> is maintained by <a href="https://github.com/sunxfancy">sunxfancy</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
